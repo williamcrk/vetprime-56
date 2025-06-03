@@ -52,12 +52,12 @@ const Index = () => {
             <h1 className="text-6xl font-bold leading-tight">
               Bem-vindo ao
               <span className={`block bg-gradient-to-r ${getGradientText()} bg-clip-text text-transparent`}>
-                Futuro Digital
+                VetPrime
               </span>
             </h1>
             <p className="text-xl text-white/80 leading-relaxed">
-              Uma experiência moderna e intuitiva para o seu workspace digital. 
-              Conecte-se com facilidade e produtividade.
+              Sistema completo de gestão veterinária. 
+              Cuide melhor dos seus pacientes com tecnologia moderna.
             </p>
             <div className="flex space-x-4">
               <div className="w-3 h-3 bg-white/50 rounded-full animate-pulse"></div>

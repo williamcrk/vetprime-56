@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail } from 'lucide-react';
+import { User, Mail, Heart } from 'lucide-react';
 
 const LoginFormOrange = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +27,7 @@ const LoginFormOrange = () => {
 
     toast({
       title: "Login realizado!",
-      description: "Bem-vindo ao Digital Workplace",
+      description: "Bem-vindo ao VetPrime",
     });
   };
 
@@ -37,14 +37,16 @@ const LoginFormOrange = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <div className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                <div className="w-4 h-4 bg-white rounded-sm"></div>
+              <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                <Heart className="w-5 h-5 text-white fill-white" />
               </div>
-              digital workplace
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                VetPrime
+              </span>
             </div>
           </div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Bem-vindo!</h1>
-          <p className="text-gray-600">Insira seus dados para entrar no ShareFile</p>
+          <p className="text-gray-600">Acesse o sistema de gestão veterinária</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -98,7 +100,7 @@ const LoginFormOrange = () => {
             type="submit"
             className="w-full h-12 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
           >
-            Continuar
+            Acessar Sistema
           </Button>
         </form>
 
