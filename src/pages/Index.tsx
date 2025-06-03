@@ -4,49 +4,39 @@ import GeometricBackground from '@/components/GeometricBackground';
 import GeometricBackgroundBlue from '@/components/GeometricBackgroundBlue';
 import GeometricBackgroundGreen from '@/components/GeometricBackgroundGreen';
 import GeometricBackgroundOrange from '@/components/GeometricBackgroundOrange';
-import GeometricBackgroundGray from '@/components/GeometricBackgroundGray';
-import GeometricBackgroundSlate from '@/components/GeometricBackgroundSlate';
 import LoginForm from '@/components/LoginForm';
 import LoginFormBlue from '@/components/LoginFormBlue';
 import LoginFormGreen from '@/components/LoginFormGreen';
 import LoginFormOrange from '@/components/LoginFormOrange';
-import LoginFormGray from '@/components/LoginFormGray';
-import LoginFormSlate from '@/components/LoginFormSlate';
 import ColorSwitcher from '@/components/ColorSwitcher';
 
 const Index = () => {
-  const [currentTheme, setCurrentTheme] = useState('blue');
+  const [currentTheme, setCurrentTheme] = useState('purple');
 
   const getBackgroundComponent = () => {
     switch (currentTheme) {
-      case 'purple': return <GeometricBackground />;
+      case 'blue': return <GeometricBackgroundBlue />;
       case 'green': return <GeometricBackgroundGreen />;
       case 'orange': return <GeometricBackgroundOrange />;
-      case 'gray': return <GeometricBackgroundGray />;
-      case 'slate': return <GeometricBackgroundSlate />;
-      default: return <GeometricBackgroundBlue />;
+      default: return <GeometricBackground />;
     }
   };
 
   const getFormComponent = () => {
     switch (currentTheme) {
-      case 'purple': return <LoginForm />;
+      case 'blue': return <LoginFormBlue />;
       case 'green': return <LoginFormGreen />;
       case 'orange': return <LoginFormOrange />;
-      case 'gray': return <LoginFormGray />;
-      case 'slate': return <LoginFormSlate />;
-      default: return <LoginFormBlue />;
+      default: return <LoginForm />;
     }
   };
 
   const getGradientText = () => {
     switch (currentTheme) {
-      case 'purple': return 'from-white to-purple-200';
+      case 'blue': return 'from-white to-blue-200';
       case 'green': return 'from-white to-green-200';
       case 'orange': return 'from-white to-orange-200';
-      case 'gray': return 'from-white to-gray-200';
-      case 'slate': return 'from-white to-slate-200';
-      default: return 'from-white to-blue-200';
+      default: return 'from-white to-purple-200';
     }
   };
 
