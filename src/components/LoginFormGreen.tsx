@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail } from 'lucide-react';
 
-const LoginForm = () => {
+const LoginFormGreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -34,11 +34,10 @@ const LoginForm = () => {
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 animate-fade-in">
-        {/* Logo and welcome text */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <div className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center">
                 <div className="w-4 h-4 bg-white rounded-sm"></div>
               </div>
               digital workplace
@@ -48,7 +47,6 @@ const LoginForm = () => {
           <p className="text-gray-600">Insira seus dados para entrar no ShareFile</p>
         </div>
 
-        {/* Login form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-700 font-medium">
@@ -61,7 +59,7 @@ const LoginForm = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 h-12 bg-white/50 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-purple-500 transition-all duration-200"
+                className="pl-10 h-12 bg-white/50 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-emerald-500 transition-all duration-200"
                 placeholder="seu@email.com"
               />
             </div>
@@ -78,7 +76,7 @@ const LoginForm = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 h-12 bg-white/50 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-purple-500 transition-all duration-200"
+                className="pl-10 h-12 bg-white/50 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-emerald-500 transition-all duration-200"
                 placeholder="••••••••"
               />
             </div>
@@ -98,15 +96,14 @@ const LoginForm = () => {
 
           <Button
             type="submit"
-            className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
+            className="w-full h-12 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
           >
             Continuar
           </Button>
         </form>
 
-        {/* Privacy policy link */}
         <div className="mt-6 text-center">
-          <a href="#" className="text-sm text-purple-600 hover:text-purple-700 transition-colors duration-200">
+          <a href="#" className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors duration-200">
             Política de privacidade
           </a>
         </div>
@@ -115,4 +112,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default LoginFormGreen;

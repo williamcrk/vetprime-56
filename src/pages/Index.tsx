@@ -1,22 +1,57 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import GeometricBackground from '@/components/GeometricBackground';
+import GeometricBackgroundBlue from '@/components/GeometricBackgroundBlue';
+import GeometricBackgroundGreen from '@/components/GeometricBackgroundGreen';
+import GeometricBackgroundOrange from '@/components/GeometricBackgroundOrange';
 import LoginForm from '@/components/LoginForm';
+import LoginFormBlue from '@/components/LoginFormBlue';
+import LoginFormGreen from '@/components/LoginFormGreen';
+import LoginFormOrange from '@/components/LoginFormOrange';
+import ColorSwitcher from '@/components/ColorSwitcher';
 
 const Index = () => {
+  const [currentTheme, setCurrentTheme] = useState('purple');
+
+  const getBackgroundComponent = () => {
+    switch (currentTheme) {
+      case 'blue': return <GeometricBackgroundBlue />;
+      case 'green': return <GeometricBackgroundGreen />;
+      case 'orange': return <GeometricBackgroundOrange />;
+      default: return <GeometricBackground />;
+    }
+  };
+
+  const getFormComponent = () => {
+    switch (currentTheme) {
+      case 'blue': return <LoginFormBlue />;
+      case 'green': return <LoginFormGreen />;
+      case 'orange': return <LoginFormOrange />;
+      default: return <LoginForm />;
+    }
+  };
+
+  const getGradientText = () => {
+    switch (currentTheme) {
+      case 'blue': return 'from-white to-blue-200';
+      case 'green': return 'from-white to-green-200';
+      case 'orange': return 'from-white to-orange-200';
+      default: return 'from-white to-purple-200';
+    }
+  };
+
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4">
-      {/* Background with geometric elements */}
-      <GeometricBackground />
+      {getBackgroundComponent()}
       
-      {/* Main content */}
+      <ColorSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} />
+      
       <div className="relative z-10 w-full max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Hero content */}
           <div className="hidden lg:block text-white space-y-6 animate-slide-in">
             <h1 className="text-6xl font-bold leading-tight">
               Bem-vindo ao
-              <span className="block bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              <span className={`block bg-gradient-to-r ${getGradientText()} bg-clip-text text-transparent`}>
                 Futuro Digital
               </span>
             </h1>
@@ -31,14 +66,12 @@ const Index = () => {
             </div>
           </div>
           
-          {/* Right side - Login form */}
           <div className="flex justify-center lg:justify-end">
-            <LoginForm />
+            {getFormComponent()}
           </div>
         </div>
       </div>
       
-      {/* Subtle animated elements */}
       <div className="absolute top-10 right-10 w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
       <div className="absolute bottom-20 left-10 w-1 h-1 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
     </div>
