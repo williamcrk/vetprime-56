@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Heart } from 'lucide-react';
+import { User, Mail, Dog, Cat } from 'lucide-react';
 
 const LoginFormOrange = () => {
   const [email, setEmail] = useState('');
@@ -37,8 +37,9 @@ const LoginFormOrange = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <div className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white fill-white" />
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center relative">
+                <Dog className="w-4 h-4 text-white absolute -left-1" />
+                <Cat className="w-4 h-4 text-white absolute -right-1" />
               </div>
               <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                 VetPrime
