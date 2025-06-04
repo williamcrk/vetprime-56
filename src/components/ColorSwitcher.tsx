@@ -9,8 +9,8 @@ interface ColorSwitcherProps {
 
 const ColorSwitcher = ({ currentTheme, onThemeChange }: ColorSwitcherProps) => {
   const themes = [
-    { name: 'Purple/Pink', value: 'purple', colors: 'from-purple-500 to-pink-500' },
     { name: 'Blue/Teal', value: 'blue', colors: 'from-blue-500 to-teal-500' },
+    { name: 'Purple/Pink', value: 'purple', colors: 'from-purple-500 to-pink-500' },
     { name: 'Green/Emerald', value: 'green', colors: 'from-emerald-500 to-green-500' },
     { name: 'Orange/Red', value: 'orange', colors: 'from-orange-500 to-red-500' },
   ];

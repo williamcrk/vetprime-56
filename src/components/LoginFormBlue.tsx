@@ -6,12 +6,14 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Dog, Cat } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginFormBlue = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +31,9 @@ const LoginFormBlue = () => {
       title: "Login realizado!",
       description: "Bem-vindo ao VetPrime",
     });
+    
+    // Navegar para o dashboard
+    navigate('/dashboard');
   };
 
   return (

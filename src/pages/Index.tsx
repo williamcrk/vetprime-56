@@ -11,32 +11,32 @@ import LoginFormOrange from '@/components/LoginFormOrange';
 import ColorSwitcher from '@/components/ColorSwitcher';
 
 const Index = () => {
-  const [currentTheme, setCurrentTheme] = useState('purple');
+  const [currentTheme, setCurrentTheme] = useState('blue');
 
   const getBackgroundComponent = () => {
     switch (currentTheme) {
-      case 'blue': return <GeometricBackgroundBlue />;
+      case 'purple': return <GeometricBackground />;
       case 'green': return <GeometricBackgroundGreen />;
       case 'orange': return <GeometricBackgroundOrange />;
-      default: return <GeometricBackground />;
+      default: return <GeometricBackgroundBlue />;
     }
   };
 
   const getFormComponent = () => {
     switch (currentTheme) {
-      case 'blue': return <LoginFormBlue />;
+      case 'purple': return <LoginForm />;
       case 'green': return <LoginFormGreen />;
       case 'orange': return <LoginFormOrange />;
-      default: return <LoginForm />;
+      default: return <LoginFormBlue />;
     }
   };
 
   const getGradientText = () => {
     switch (currentTheme) {
-      case 'blue': return 'from-white to-blue-200';
+      case 'purple': return 'from-white to-purple-200';
       case 'green': return 'from-white to-green-200';
       case 'orange': return 'from-white to-orange-200';
-      default: return 'from-white to-purple-200';
+      default: return 'from-white to-blue-200';
     }
   };
 
