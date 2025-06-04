@@ -24,7 +24,11 @@ import {
   Dog,
   Cat,
   Heart,
-  Pill
+  Pill,
+  Scissors,
+  Shield,
+  Package,
+  Truck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -70,6 +74,16 @@ const AppSidebar = () => {
       url: "/prontuarios",
       icon: FileText,
     },
+    {
+      title: "Cirurgias",
+      url: "/cirurgias",
+      icon: Scissors,
+    },
+    {
+      title: "Vacinas",
+      url: "/vacinas",
+      icon: Shield,
+    },
   ];
 
   const managementItems = [
@@ -82,6 +96,16 @@ const AppSidebar = () => {
       title: "Relatórios",
       url: "/relatorios",
       icon: BarChart3,
+    },
+    {
+      title: "Estoque",
+      url: "/estoque",
+      icon: Package,
+    },
+    {
+      title: "Fornecedores",
+      url: "/fornecedores",
+      icon: Truck,
     },
     {
       title: "Configurações",
