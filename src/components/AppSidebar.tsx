@@ -28,7 +28,13 @@ import {
   Scissors,
   Shield,
   Package,
-  Truck
+  Truck,
+  Building2,
+  Brain,
+  MessageCircle,
+  Calculator,
+  QrCode,
+  TrendingUp
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,9 +48,14 @@ const AppSidebar = () => {
       icon: Home,
     },
     {
-      title: "Agenda",
-      url: "/agenda",
-      icon: Calendar,
+      title: "Multi-Clínicas",
+      url: "/multi-clinicas", 
+      icon: Building2,
+    },
+    {
+      title: "Agenda Inteligente",
+      url: "/agenda-inteligente",
+      icon: Brain,
     },
     {
       title: "Pacientes",
@@ -75,6 +86,11 @@ const AppSidebar = () => {
       icon: FileText,
     },
     {
+      title: "Prescrição Digital",
+      url: "/prescricao-digital",
+      icon: MessageCircle,
+    },
+    {
       title: "Cirurgias",
       url: "/cirurgias",
       icon: Scissors,
@@ -88,9 +104,9 @@ const AppSidebar = () => {
 
   const managementItems = [
     {
-      title: "Financeiro",
-      url: "/financeiro",
-      icon: CreditCard,
+      title: "Painel Financeiro",
+      url: "/painel-financeiro",
+      icon: TrendingUp,
     },
     {
       title: "Relatórios",
@@ -98,9 +114,9 @@ const AppSidebar = () => {
       icon: BarChart3,
     },
     {
-      title: "Estoque",
-      url: "/estoque",
-      icon: Package,
+      title: "Estoque Avançado",
+      url: "/estoque-avancado",
+      icon: QrCode,
     },
     {
       title: "Fornecedores",
