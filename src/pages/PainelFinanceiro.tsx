@@ -8,9 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   DollarSign, TrendingUp, Calendar, Filter, Search, Plus,
-  CreditCard, AlertTriangle, CheckCircle, Clock, Calculator
+  CreditCard, AlertTriangle, CheckCircle, Clock, Calculator,
+  Award, Percent
 } from 'lucide-react';
 import RevenueChart from '@/components/charts/RevenueChart';
 import ServiceChart from '@/components/charts/ServiceChart';
