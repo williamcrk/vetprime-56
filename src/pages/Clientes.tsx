@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Users, Search, Plus, Phone, Mail } from 'lucide-react';
 import NovoClienteModal from '@/components/modals/NovoClienteModal';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import { useToast } from '@/hooks/use-toast';
 
 const Clientes = () => {
@@ -37,13 +38,6 @@ const Clientes = () => {
     console.log('Ver perfil do cliente:', client);
   };
 
-  const handleWhatsApp = (phone: string, clientName: string) => {
-    const cleanPhone = phone.replace(/\D/g, '');
-    const message = `Olá ${clientName}! Como podemos ajudá-lo hoje?`;
-    const url = `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  };
-
   const handleCall = (phone: string) => {
     window.open(`tel:${phone}`, '_self');
   };
@@ -57,13 +51,13 @@ const Clientes = () => {
   return (
     <PageLayout title="Clientes">
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="relative">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-none">
               <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
               <Input 
                 placeholder="Buscar cliente..." 
-                className="pl-9 w-80"
+                className="pl-9 w-full sm:w-80"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -121,17 +115,17 @@ const Clientes = () => {
           <CardContent>
             <div className="space-y-4">
               {filteredClients.map((client) => (
-                <div key={client.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+                <div key={client.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
                       <Users className="w-6 h-6 text-white" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-medium">{client.name}</h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                         <button 
                           onClick={() => handleCall(client.phone)}
-                          className="flex items-center gap-1 hover:text-blue-600"
+                          className="flex items-center gap-1 hover:text-blue-600 text-left"
                         >
                           <Phone className="w-3 h-3" />
                           {client.phone}
@@ -141,31 +135,32 @@ const Clientes = () => {
                           {client.email}
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 mt-1">
                         Pets: {client.pets.join(', ')} • Cliente desde: {new Date(client.joined).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium">{client.pets.length} pet(s)</p>
-                    <p className="text-xs text-gray-500">{client.address}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleWhatsApp(client.phone, client.name)}
-                      className="text-green-600 hover:text-green-700"
-                    >
-                      WhatsApp
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleViewProfile(client)}
-                    >
-                      Ver Perfil
-                    </Button>
+                  
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+                    <div className="text-left sm:text-right">
+                      <p className="text-sm font-medium">{client.pets.length} pet(s)</p>
+                      <p className="text-xs text-gray-500">{client.address}</p>
+                    </div>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <WhatsAppButton 
+                        phone={client.phone}
+                        message={`Olá ${client.name}! Como podemos ajudá-lo hoje?`}
+                        className="flex-1 sm:flex-none"
+                      />
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleViewProfile(client)}
+                        className="flex-1 sm:flex-none"
+                      >
+                        Ver Perfil
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
