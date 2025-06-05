@@ -31,6 +31,16 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      toast({
+        title: "Erro",
+        description: "Nome é obrigatório",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -80,30 +90,20 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
           Novo Cliente
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Cadastrar Novo Cliente</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Nome Completo</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="cpf">CPF</Label>
-              <Input
-                id="cpf"
-                value={formData.cpf}
-                onChange={(e) => setFormData({...formData, cpf: e.target.value})}
-                placeholder="000.000.000-00"
-              />
-            </div>
+          <div>
+            <Label htmlFor="name">Nome Completo *</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              placeholder="Nome do cliente"
+              required
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -114,7 +114,6 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
                 value={formData.phone}
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 placeholder="(11) 99999-9999"
-                required
               />
             </div>
             <div>
@@ -124,7 +123,7 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                required
+                placeholder="cliente@email.com"
               />
             </div>
           </div>
@@ -139,35 +138,6 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="city">Cidade</Label>
-              <Input
-                id="city"
-                value={formData.city}
-                onChange={(e) => setFormData({...formData, city: e.target.value})}
-              />
-            </div>
-            <div>
-              <Label htmlFor="state">Estado</Label>
-              <Input
-                id="state"
-                value={formData.state}
-                onChange={(e) => setFormData({...formData, state: e.target.value})}
-                placeholder="SP"
-              />
-            </div>
-            <div>
-              <Label htmlFor="cep">CEP</Label>
-              <Input
-                id="cep"
-                value={formData.cep}
-                onChange={(e) => setFormData({...formData, cep: e.target.value})}
-                placeholder="00000-000"
-              />
-            </div>
-          </div>
-
           <div>
             <Label htmlFor="observations">Observações</Label>
             <Textarea
@@ -175,6 +145,7 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
               value={formData.observations}
               onChange={(e) => setFormData({...formData, observations: e.target.value})}
               placeholder="Observações sobre o cliente..."
+              rows={3}
             />
           </div>
 

@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Agenda from "./pages/Agenda";
 import AgendaInteligente from "./pages/AgendaInteligente";
+import Lembretes from "./pages/Lembretes";
 import MultiClinicas from "./pages/MultiClinicas";
 import Pacientes from "./pages/Pacientes";
 import Clientes from "./pages/Clientes";
@@ -44,7 +45,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/agenda" element={<Agenda />} />
-          <Route path="/agenda-inteligente" element={<AgendaInteligente />} />
+          <Route path="/lembretes" element={<Lembretes />} />
+          <Route path="/agenda-inteligente" element={<Lembretes />} />
           <Route path="/multi-clinicas" element={<MultiClinicas />} />
           <Route path="/pacientes" element={<Pacientes />} />
           <Route path="/clientes" element={<Clientes />} />

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   UserCheck, Search, Plus, Phone, Mail, Calendar, Clock, 
   CheckCircle, AlertTriangle, Edit, Trash2, Star, Award,
-  Activity, Users, Shield, Settings
+  Activity, Users, Shield, Settings, UserPlus, User, Heart, Stethoscope
 } from 'lucide-react';
 
 const Profissionais = () => {

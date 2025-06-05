@@ -29,12 +29,53 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
     observations: ''
   });
 
+  // Lista de tutores mockados (seria do banco)
+  const tutores = [
+    { id: '1', name: 'Maria Silva' },
+    { id: '2', name: 'João Santos' },
+    { id: '3', name: 'Ana Costa' },
+    { id: '4', name: 'Carlos Lima' },
+    { id: '5', name: 'Pedro Alves' },
+  ];
+
+  // Raças predefinidas por espécie
+  const racasPorEspecie = {
+    cao: [
+      'Golden Retriever', 'Labrador', 'Pastor Alemão', 'Bulldog Francês', 
+      'Poodle', 'Yorkshire', 'Shih Tzu', 'Border Collie', 'Rottweiler',
+      'Husky Siberiano', 'Beagle', 'Dachshund', 'Boxer', 'SRD (Sem Raça Definida)'
+    ],
+    gato: [
+      'Siamês', 'Persa', 'Maine Coon', 'British Shorthair', 'Ragdoll',
+      'Bengal', 'Sphynx', 'Angorá', 'SRD (Sem Raça Definida)'
+    ],
+    ave: [
+      'Canário', 'Periquito', 'Calopsita', 'Papagaio', 'Agapornis',
+      'Diamante Gould', 'Mandarim'
+    ],
+    roedor: [
+      'Hamster', 'Porquinho da Índia', 'Chinchila', 'Coelho', 'Gerbil'
+    ],
+    reptil: [
+      'Iguana', 'Gecko', 'Jabuti', 'Cobra do Milho', 'Pogona'
+    ]
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      toast({
+        title: "Erro",
+        description: "Nome do animal é obrigatório",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Simular criação do paciente (aqui você integraria com o Supabase)
       const newPatient = {
         id: Date.now().toString(),
         ...formData,
@@ -80,36 +121,42 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
           Novo Paciente
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Cadastrar Novo Paciente</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Nome do Animal</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="owner">Nome do Tutor</Label>
-              <Input
-                id="owner"
-                value={formData.owner}
-                onChange={(e) => setFormData({...formData, owner: e.target.value})}
-                required
-              />
-            </div>
+          <div>
+            <Label htmlFor="name">Nome do Animal *</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              placeholder="Nome do pet"
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="owner">Tutor *</Label>
+            <Select value={formData.owner} onValueChange={(value) => setFormData({...formData, owner: value})}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o tutor" />
+              </SelectTrigger>
+              <SelectContent>
+                {tutores.map((tutor) => (
+                  <SelectItem key={tutor.id} value={tutor.name}>
+                    {tutor.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="species">Espécie</Label>
-              <Select value={formData.species} onValueChange={(value) => setFormData({...formData, species: value})}>
+              <Select value={formData.species} onValueChange={(value) => setFormData({...formData, species: value, breed: ''})}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
@@ -124,11 +171,18 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
             </div>
             <div>
               <Label htmlFor="breed">Raça</Label>
-              <Input
-                id="breed"
-                value={formData.breed}
-                onChange={(e) => setFormData({...formData, breed: e.target.value})}
-              />
+              <Select value={formData.breed} onValueChange={(value) => setFormData({...formData, breed: value})} disabled={!formData.species}>
+                <SelectTrigger>
+                  <SelectValue placeholder={formData.species ? "Selecione a raça" : "Selecione espécie primeiro"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {formData.species && racasPorEspecie[formData.species as keyof typeof racasPorEspecie]?.map((raca) => (
+                    <SelectItem key={raca} value={raca}>
+                      {raca}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -139,7 +193,7 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
                 id="age"
                 value={formData.age}
                 onChange={(e) => setFormData({...formData, age: e.target.value})}
-                placeholder="Ex: 2 anos"
+                placeholder="2 anos"
               />
             </div>
             <div>
@@ -150,14 +204,14 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
                 step="0.1"
                 value={formData.weight}
                 onChange={(e) => setFormData({...formData, weight: e.target.value})}
-                placeholder="Ex: 15.5"
+                placeholder="15.5"
               />
             </div>
             <div>
               <Label htmlFor="gender">Sexo</Label>
               <Select value={formData.gender} onValueChange={(value) => setFormData({...formData, gender: value})}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
+                  <SelectValue placeholder="Sexo" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="macho">Macho</SelectItem>
@@ -174,6 +228,7 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
               value={formData.observations}
               onChange={(e) => setFormData({...formData, observations: e.target.value})}
               placeholder="Observações gerais sobre o paciente..."
+              rows={3}
             />
           </div>
 
@@ -181,7 +236,7 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !formData.name.trim()}>
               {loading ? 'Cadastrando...' : 'Cadastrar'}
             </Button>
           </div>
