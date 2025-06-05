@@ -1,11 +1,19 @@
-
 import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TrendingUp, TrendingDown, DollarSign, Users, Percent, Award, Calculator, Calendar } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  DollarSign, TrendingUp, Calendar, Filter, Search, Plus,
+  CreditCard, AlertTriangle, CheckCircle, Clock, Calculator
+} from 'lucide-react';
+import RevenueChart from '@/components/charts/RevenueChart';
+import ServiceChart from '@/components/charts/ServiceChart';
 
 const PainelFinanceiro = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
@@ -58,7 +66,7 @@ const PainelFinanceiro = () => {
   ];
 
   return (
-    <PageLayout title="Painel Financeiro Completo">
+    <PageLayout title="Painel Financeiro Avançado">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
