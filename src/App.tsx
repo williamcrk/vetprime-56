@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,6 +43,7 @@ const App = () => (
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/consulta" element={<NovaConsulta />} />
           <Route path="/internamentos" element={<Internamentos />} />
+          <Route path="/painel-internamento" element={<PainelInternamento />} />
           <Route path="/prontuarios" element={<Prontuarios />} />
           <Route path="/prescricao-digital" element={<PrescricaoDigital />} />
           <Route path="/cirurgias" element={<Cirurgias />} />
@@ -55,6 +55,24 @@ const App = () => (
           <Route path="/estoque-avancado" element={<EstoqueAvancado />} />
           <Route path="/fornecedores" element={<Fornecedores />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
+          
+          {/* Super Admin Routes */}
+          <Route path="/super-admin/dashboard" element={<Dashboard />} />
+          <Route path="/super-admin/clinicas" element={<MultiClinicas />} />
+          <Route path="/super-admin/usuarios" element={<Clientes />} />
+          <Route path="/super-admin/cobranca" element={<PainelFinanceiro />} />
+          <Route path="/super-admin/relatorios" element={<Relatorios />} />
+          <Route path="/super-admin/configuracoes" element={<Configuracoes />} />
+          
+          {/* Professional Routes */}
+          <Route path="/veterinarios" element={<Clientes />} />
+          <Route path="/atendentes" element={<Clientes />} />
+          <Route path="/escalas" element={<Agenda />} />
+          <Route path="/comissoes" element={<PainelFinanceiro />} />
+          <Route path="/servicos" element={<Configuracoes />} />
+          <Route path="/exames" element={<Prontuarios />} />
+          <Route path="/evolucoes" element={<Prontuarios />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
