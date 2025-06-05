@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +13,7 @@ import Pacientes from "./pages/Pacientes";
 import Clientes from "./pages/Clientes";
 import NovaConsulta from "./pages/NovaConsulta";
 import Internamentos from "./pages/Internamentos";
+import PainelInternamento from "./pages/PainelInternamento";
 import Prontuarios from "./pages/Prontuarios";
 import PrescricaoDigital from "./pages/PrescricaoDigital";
 import Financeiro from "./pages/Financeiro";

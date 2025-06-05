@@ -16,14 +16,14 @@ import {
   Home,
   Calendar,
   Users,
-  UserCheck,
+  Heart,
+  CreditCard,
   TrendingUp,
-  BarChart3,
   Package,
-  Truck,
-  DollarSign,
   Settings,
-  FileText,
+  BarChart3,
+  UserCheck,
+  Building2,
   Dog,
   Cat
 } from 'lucide-react';
@@ -39,31 +39,28 @@ const AdminSidebar = () => {
       icon: Home,
     },
     {
-      title: "Agenda Inteligente",
-      url: "/agenda-inteligente",
-      icon: Calendar,
-    },
-  ];
-
-  const profissionaisItems = [
-    {
-      title: "Veterinários",
-      url: "/veterinarios",
-      icon: UserCheck,
-    },
-    {
-      title: "Atendentes",
-      url: "/atendentes",
-      icon: Users,
-    },
-    {
-      title: "Escalas & Plantões",
-      url: "/escalas",
+      title: "Agenda",
+      url: "/agenda",
       icon: Calendar,
     },
   ];
 
   const gestaoItems = [
+    {
+      title: "Profissionais",
+      url: "/veterinarios",
+      icon: UserCheck,
+    },
+    {
+      title: "Clientes",
+      url: "/clientes",
+      icon: Users,
+    },
+    {
+      title: "Pacientes",
+      url: "/pacientes",
+      icon: Heart,
+    },
     {
       title: "Painel Financeiro",
       url: "/painel-financeiro",
@@ -82,21 +79,8 @@ const AdminSidebar = () => {
     {
       title: "Fornecedores",
       url: "/fornecedores",
-      icon: Truck,
+      icon: Building2,
     },
-    {
-      title: "Comissões",
-      url: "/comissoes",
-      icon: DollarSign,
-    },
-    {
-      title: "Tabela de Serviços",
-      url: "/servicos",
-      icon: FileText,
-    },
-  ];
-
-  const configuracaoItems = [
     {
       title: "Configurações",
       url: "/configuracoes",
@@ -141,27 +125,6 @@ const AdminSidebar = () => {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>🧑‍⚕️ Profissionais</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {profissionaisItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <button
-                      onClick={() => navigate(item.url)}
-                      className="w-full flex items-center gap-2"
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
           <SidebarGroupLabel>📦 Gestão</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -181,32 +144,11 @@ const AdminSidebar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>⚙️ Configurações</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {configuracaoItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <button
-                      onClick={() => navigate(item.url)}
-                      className="w-full flex items-center gap-2"
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
         <div className="px-4 py-2 text-sm text-gray-500">
-          <p>Admin - João Silva</p>
+          <p>Admin - Carlos Silva</p>
           <p className="text-xs">Clínica VetPrime</p>
         </div>
       </SidebarFooter>
