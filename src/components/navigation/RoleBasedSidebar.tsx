@@ -27,7 +27,10 @@ const RoleBasedSidebar = () => {
     return <VeterinarianSidebar />; // Fallback
   }
 
-  switch (userProfile.role) {
+  // Corrigir o switch para aceitar todos os tipos de role
+  const role = userProfile.role as string;
+  
+  switch (role) {
     case 'super_admin':
       return <SuperAdminSidebar />;
     case 'admin':
