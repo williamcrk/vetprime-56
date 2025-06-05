@@ -5,6 +5,7 @@ import SuperAdminSidebar from './SuperAdminSidebar';
 import AdminSidebar from './AdminSidebar';
 import VeterinarianSidebar from './VeterinarianSidebar';
 import ReceptionistSidebar from './ReceptionistSidebar';
+import DevSidebar from './DevSidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const RoleBasedSidebar = () => {
@@ -27,10 +28,11 @@ const RoleBasedSidebar = () => {
     return <VeterinarianSidebar />; // Fallback
   }
 
-  // Corrigir o switch para aceitar todos os tipos de role
   const role = userProfile.role as string;
   
   switch (role) {
+    case 'dev':
+      return <DevSidebar />;
     case 'super_admin':
       return <SuperAdminSidebar />;
     case 'admin':
