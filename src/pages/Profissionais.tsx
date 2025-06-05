@@ -1,19 +1,19 @@
-
 import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  User, UserPlus, Search, Calendar, Clock, Shield, 
-  Stethoscope, Heart, Phone, Mail, MapPin, Award,
-  Activity, Star, TrendingUp, CheckCircle
+  UserCheck, Search, Plus, Phone, Mail, Calendar, Clock, 
+  CheckCircle, AlertTriangle, Edit, Trash2, Star, Award,
+  Activity, Users, Shield, Settings
 } from 'lucide-react';
 
 const Profissionais = () => {
