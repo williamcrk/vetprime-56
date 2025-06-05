@@ -1,28 +1,95 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, DollarSign, Users, Percent, Award } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TrendingUp, TrendingDown, DollarSign, Users, Percent, Award, Calculator, Calendar } from 'lucide-react';
 
 const PainelFinanceiro = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState('month');
+
   const veterinarians = [
-    { name: 'Dr. João Silva', revenue: 28500, commission: 5700, services: 45, rank: 1 },
-    { name: 'Dra. Maria Santos', revenue: 24300, commission: 4860, services: 38, rank: 2 },
-    { name: 'Dr. Pedro Costa', revenue: 19800, commission: 3960, services: 32, rank: 3 },
+    { 
+      name: 'Dr. João Silva', 
+      revenue: 28500, 
+      commission: 5700, 
+      services: 45, 
+      rank: 1,
+      commissionRate: 20,
+      bonus: 500,
+      specialty: 'Cirurgia'
+    },
+    { 
+      name: 'Dra. Maria Santos', 
+      revenue: 24300, 
+      commission: 4860, 
+      services: 38, 
+      rank: 2,
+      commissionRate: 20,
+      bonus: 300,
+      specialty: 'Clínica Geral'
+    },
+    { 
+      name: 'Dr. Pedro Costa', 
+      revenue: 19800, 
+      commission: 3960, 
+      services: 32, 
+      rank: 3,
+      commissionRate: 20,
+      bonus: 0,
+      specialty: 'Dermatologia'
+    },
   ];
 
   const serviceCommissions = [
-    { service: 'Vacinas', percentage: 10, revenue: 12500 },
-    { service: 'Cirurgias', percentage: 20, revenue: 35000 },
-    { service: 'Consultas', percentage: 15, revenue: 18500 },
-    { service: 'Exames', percentage: 12, revenue: 8900 },
+    { service: 'Vacinas', percentage: 10, revenue: 12500, newClients: 45 },
+    { service: 'Cirurgias', percentage: 20, revenue: 35000, newClients: 12 },
+    { service: 'Consultas', percentage: 15, revenue: 18500, newClients: 89 },
+    { service: 'Exames', percentage: 12, revenue: 8900, newClients: 23 },
+  ];
+
+  const commissionRules = [
+    { rule: 'Meta Mensal > R$ 25.000', bonus: 'R$ 500 extra', active: true },
+    { rule: 'Novos Clientes > 20', bonus: '2% adicional', active: true },
+    { rule: 'Avaliação > 4.8', bonus: 'R$ 200 extra', active: true },
+    { rule: 'Cirurgias > 10', bonus: '5% adicional', active: false },
   ];
 
   return (
     <PageLayout title="Painel Financeiro Completo">
       <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold">Sistema Avançado de Comissões</h2>
+            <p className="text-gray-600">Cálculo automático com regras personalizadas</p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant={selectedPeriod === 'week' ? 'default' : 'outline'}
+              onClick={() => setSelectedPeriod('week')}
+              size="sm"
+            >
+              Semana
+            </Button>
+            <Button 
+              variant={selectedPeriod === 'month' ? 'default' : 'outline'}
+              onClick={() => setSelectedPeriod('month')}
+              size="sm"
+            >
+              Mês
+            </Button>
+            <Button 
+              variant={selectedPeriod === 'year' ? 'default' : 'outline'}
+              onClick={() => setSelectedPeriod('year')}
+              size="sm"
+            >
+              Ano
+            </Button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
@@ -30,19 +97,7 @@ const PainelFinanceiro = () => {
                 <TrendingUp className="w-5 h-5 text-green-500" />
                 <div>
                   <p className="text-2xl font-bold">R$ 72.600</p>
-                  <p className="text-sm text-gray-600">Receita Mensal</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <TrendingDown className="w-5 h-5 text-red-500" />
-                <div>
-                  <p className="text-2xl font-bold">R$ 28.400</p>
-                  <p className="text-sm text-gray-600">Despesas</p>
+                  <p className="text-sm text-gray-600">Receita Total</p>
                 </div>
               </div>
             </CardContent>
@@ -53,8 +108,8 @@ const PainelFinanceiro = () => {
               <div className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-blue-500" />
                 <div>
-                  <p className="text-2xl font-bold">R$ 44.200</p>
-                  <p className="text-sm text-gray-600">Lucro Líquido</p>
+                  <p className="text-2xl font-bold">R$ 14.520</p>
+                  <p className="text-sm text-gray-600">Comissões Pagas</p>
                 </div>
               </div>
             </CardContent>
@@ -63,143 +118,219 @@ const PainelFinanceiro = () => {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Percent className="w-5 h-5 text-purple-500" />
+                <Award className="w-5 h-5 text-purple-500" />
                 <div>
-                  <p className="text-2xl font-bold">60.9%</p>
-                  <p className="text-sm text-gray-600">Margem de Lucro</p>
+                  <p className="text-2xl font-bold">R$ 800</p>
+                  <p className="text-sm text-gray-600">Bônus do Mês</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Percent className="w-5 h-5 text-orange-500" />
+                <div>
+                  <p className="text-2xl font-bold">20%</p>
+                  <p className="text-sm text-gray-600">Taxa Média</p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Comissões por Veterinário</CardTitle>
-              <CardDescription>Ranking mensal com cálculo automático</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {veterinarians.map((vet) => (
-                  <div key={vet.name} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-bold text-blue-600">#{vet.rank}</span>
+        <Tabs defaultValue="veterinarians" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="veterinarians">Veterinários</TabsTrigger>
+            <TabsTrigger value="services">Por Serviço</TabsTrigger>
+            <TabsTrigger value="rules">Regras de Comissão</TabsTrigger>
+            <TabsTrigger value="calculator">Calculadora</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="veterinarians">
+            <Card>
+              <CardHeader>
+                <CardTitle>Comissões por Veterinário</CardTitle>
+                <CardDescription>Ranking mensal com cálculo automático e bônus</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {veterinarians.map((vet) => (
+                    <div key={vet.name} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-lg font-bold text-blue-600">#{vet.rank}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-medium">{vet.name}</h3>
+                          <p className="text-sm text-gray-600">{vet.specialty}</p>
+                          <div className="flex items-center gap-4 text-xs">
+                            <span>{vet.services} atendimentos</span>
+                            <span>{vet.commissionRate}% comissão</span>
+                            {vet.bonus > 0 && (
+                              <Badge className="bg-purple-100 text-purple-800">
+                                +R$ {vet.bonus} bônus
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
                       </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold text-green-600">
+                          R$ {(vet.commission + vet.bonus).toLocaleString()}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Base: R$ {vet.commission.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          de R$ {vet.revenue.toLocaleString()}
+                        </p>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        Detalhes
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="services">
+            <Card>
+              <CardHeader>
+                <CardTitle>Comissões por Serviço</CardTitle>
+                <CardDescription>Configuração e resultados por categoria</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {serviceCommissions.map((item) => (
+                    <div key={item.service} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                       <div>
-                        <h3 className="font-medium">{vet.name}</h3>
-                        <p className="text-sm text-gray-600">{vet.services} atendimentos</p>
+                        <h3 className="font-medium">{item.service}</h3>
+                        <p className="text-sm text-gray-600">
+                          Comissão: {item.percentage}% | {item.newClients} novos clientes
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-medium">R$ {item.revenue.toLocaleString()}</p>
+                        <p className="text-sm text-green-600">
+                          Comissão: R$ {(item.revenue * item.percentage / 100).toLocaleString()}
+                        </p>
+                        {item.newClients > 20 && (
+                          <Badge className="bg-blue-100 text-blue-800 text-xs">
+                            +2% bônus novos clientes
+                          </Badge>
+                        )}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-green-600">R$ {vet.commission.toLocaleString()}</p>
-                      <p className="text-sm text-gray-500">de R$ {vet.revenue.toLocaleString()}</p>
+                  ))}
+                </div>
+                <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
+                  <Calculator className="w-4 h-4 mr-2" />
+                  Configurar Comissões
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="rules">
+            <Card>
+              <CardHeader>
+                <CardTitle>Regras de Comissão Automática</CardTitle>
+                <CardDescription>Configure bônus e incentivos personalizados</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {commissionRules.map((rule, index) => (
+                    <div key={index} className={`flex items-center justify-between p-4 border rounded-lg ${rule.active ? 'bg-green-50 border-green-200' : 'bg-gray-50'}`}>
+                      <div>
+                        <h3 className="font-medium">{rule.rule}</h3>
+                        <p className="text-sm text-gray-600">Bônus: {rule.bonus}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={rule.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                          {rule.active ? 'Ativa' : 'Inativa'}
+                        </Badge>
+                        <Button variant="outline" size="sm">
+                          {rule.active ? 'Desativar' : 'Ativar'}
+                        </Button>
+                      </div>
                     </div>
+                  ))}
+                </div>
+                <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Regra
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="calculator">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Calculadora de Comissão</CardTitle>
+                  <CardDescription>Simule comissões para diferentes cenários</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Valor do Serviço</label>
+                    <input type="number" placeholder="Ex: 1500" className="w-full p-2 border rounded-lg" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Comissões por Serviço</CardTitle>
-              <CardDescription>Configuração e resultados por categoria</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {serviceCommissions.map((item) => (
-                  <div key={item.service} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <h3 className="font-medium">{item.service}</h3>
-                      <p className="text-sm text-gray-600">Comissão: {item.percentage}%</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">R$ {item.revenue.toLocaleString()}</p>
-                      <p className="text-sm text-green-600">
-                        +R$ {(item.revenue * item.percentage / 100).toLocaleString()}
-                      </p>
-                    </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Taxa de Comissão (%)</label>
+                    <input type="number" placeholder="Ex: 20" className="w-full p-2 border rounded-lg" />
                   </div>
-                ))}
-              </div>
-              <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
-                Configurar Comissões
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Fluxo de Caixa Diário</CardTitle>
-              <CardDescription>Entradas e saídas hoje</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span>Entradas</span>
-                  <span className="font-medium text-green-600">R$ 2.450</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Saídas</span>
-                  <span className="font-medium text-red-600">R$ 890</span>
-                </div>
-                <div className="border-t pt-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium">Saldo</span>
-                    <span className="font-bold text-blue-600">R$ 1.560</span>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Bônus Adicional</label>
+                    <input type="number" placeholder="Ex: 200" className="w-full p-2 border rounded-lg" />
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Calculator className="w-4 h-4 mr-2" />
+                    Calcular
+                  </Button>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h3 className="font-medium text-blue-800">Resultado da Simulação</h3>
+                    <p className="text-2xl font-bold text-blue-600">R$ 500,00</p>
+                    <p className="text-sm text-blue-600">Comissão total estimada</p>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Receita por Serviço</CardTitle>
-              <CardDescription>Distribuição mensal</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Cirurgias</span>
-                  <span className="font-medium">48%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Consultas</span>
-                  <span className="font-medium">25%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Vacinas</span>
-                  <span className="font-medium">17%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Exames</span>
-                  <span className="font-medium">10%</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Meta do Mês</CardTitle>
-              <CardDescription>Progresso atual</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">78%</div>
-                <p className="text-sm text-gray-600 mb-4">R$ 56.500 de R$ 72.000</p>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: '78%' }}></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Histórico de Pagamentos</CardTitle>
+                  <CardDescription>Últimas comissões pagas</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {[
+                      { name: 'Dr. João Silva', amount: 5700, date: '15/11/2024', status: 'Pago' },
+                      { name: 'Dra. Maria Santos', amount: 4860, date: '15/11/2024', status: 'Pago' },
+                      { name: 'Dr. Pedro Costa', amount: 3960, date: '15/11/2024', status: 'Pendente' },
+                    ].map((payment, index) => (
+                      <div key={index} className="flex justify-between items-center p-3 border rounded-lg">
+                        <div>
+                          <p className="font-medium">{payment.name}</p>
+                          <p className="text-sm text-gray-600">{payment.date}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">R$ {payment.amount.toLocaleString()}</p>
+                          <Badge className={payment.status === 'Pago' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                            {payment.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </PageLayout>
   );

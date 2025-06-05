@@ -1,228 +1,390 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { Settings, User, Bell, Shield, Database } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Settings, Bell, Clock, Mail, MessageCircle, 
+  Users, Shield, Database, Palette, Save,
+  Calendar, DollarSign, FileText, Zap
+} from 'lucide-react';
 
 const Configuracoes = () => {
+  const [emailTemplates] = useState([
+    { 
+      name: 'Confirmação de Consulta', 
+      subject: 'Sua consulta está confirmada - {pet_name}',
+      active: true,
+      usage: 156
+    },
+    { 
+      name: 'Lembrete de Vacinação', 
+      subject: 'Hora da vacina do {pet_name}!',
+      active: true,
+      usage: 89
+    },
+    { 
+      name: 'Cobrança Pendente', 
+      subject: 'Pagamento pendente - {owner_name}',
+      active: false,
+      usage: 23
+    }
+  ]);
+
+  const [businessHours] = useState([
+    { day: 'Segunda-feira', open: '08:00', close: '18:00', active: true },
+    { day: 'Terça-feira', open: '08:00', close: '18:00', active: true },
+    { day: 'Quarta-feira', open: '08:00', close: '18:00', active: true },
+    { day: 'Quinta-feira', open: '08:00', close: '18:00', active: true },
+    { day: 'Sexta-feira', open: '08:00', close: '18:00', active: true },
+    { day: 'Sábado', open: '08:00', close: '12:00', active: true },
+    { day: 'Domingo', open: '09:00', close: '12:00', active: false },
+  ]);
+
+  const [automationRules] = useState([
+    {
+      name: 'Lembrete Automático de Consulta',
+      description: 'Envia WhatsApp 1 dia antes da consulta',
+      active: true,
+      trigger: '24h antes',
+      action: 'WhatsApp'
+    },
+    {
+      name: 'Alerta de Estoque Baixo',
+      description: 'Notifica quando produto atinge estoque mínimo',
+      active: true,
+      trigger: 'Estoque < 20%',
+      action: 'Notificação + Email'
+    },
+    {
+      name: 'Cobrança Automática',
+      description: 'Envia link de pagamento após 3 dias em atraso',
+      active: false,
+      trigger: '3 dias atraso',
+      action: 'WhatsApp + Email'
+    }
+  ]);
+
   return (
-    <PageLayout title="Configurações">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
-                <div>
-                  <p className="font-medium text-blue-900">Perfil</p>
-                  <p className="text-sm text-blue-700">Dados pessoais</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-green-50 border-green-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5 text-green-600" />
-                <div>
-                  <p className="font-medium text-green-900">Notificações</p>
-                  <p className="text-sm text-green-700">Alertas e avisos</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-purple-50 border-purple-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-purple-600" />
-                <div>
-                  <p className="font-medium text-purple-900">Segurança</p>
-                  <p className="text-sm text-purple-700">Senhas e acesso</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-orange-50 border-orange-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Database className="w-5 h-5 text-orange-600" />
-                <div>
-                  <p className="font-medium text-orange-900">Sistema</p>
-                  <p className="text-sm text-orange-700">Backup e logs</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+    <PageLayout title="Configurações Avançadas">
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold">Sistema de Configurações</h2>
+            <p className="text-gray-600">Personalize templates, horários e automações</p>
+          </div>
+          <Button className="bg-blue-600 hover:bg-blue-700">
+            <Save className="w-4 h-4 mr-2" />
+            Salvar Alterações
+          </Button>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5" />
-              Informações da Clínica
-            </CardTitle>
-            <CardDescription>Configure os dados básicos da sua clínica veterinária</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="clinic-name">Nome da Clínica</Label>
-                <Input id="clinic-name" defaultValue="VetPrime Clínica Veterinária" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="cnpj">CNPJ</Label>
-                <Input id="cnpj" defaultValue="12.345.678/0001-90" />
-              </div>
+        <Tabs defaultValue="templates" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="templates">Templates</TabsTrigger>
+            <TabsTrigger value="schedule">Horários</TabsTrigger>
+            <TabsTrigger value="automation">Automação</TabsTrigger>
+            <TabsTrigger value="notifications">Notificações</TabsTrigger>
+            <TabsTrigger value="integrations">Integrações</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="templates">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Templates de Email</CardTitle>
+                  <CardDescription>Personalize mensagens automáticas</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {emailTemplates.map((template, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div>
+                          <h4 className="font-medium">{template.name}</h4>
+                          <p className="text-sm text-gray-600">{template.subject}</p>
+                          <p className="text-xs text-gray-500">Usado {template.usage} vezes</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={template.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                            {template.active ? 'Ativo' : 'Inativo'}
+                          </Badge>
+                          <Button variant="outline" size="sm">
+                            Editar
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
+                    <FileText className="w-4 h-4 mr-2" />
+                    Novo Template
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Editor de Template</CardTitle>
+                  <CardDescription>Criar ou editar template de mensagem</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Nome do Template</label>
+                    <Input placeholder="Ex: Confirmação de Consulta" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Assunto</label>
+                    <Input placeholder="Ex: Sua consulta está confirmada" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Conteúdo</label>
+                    <Textarea 
+                      placeholder="Olá {owner_name}! A consulta do {pet_name} está confirmada para {date} às {time}."
+                      rows={6}
+                    />
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <p className="font-medium mb-1">Variáveis disponíveis:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {['{owner_name}', '{pet_name}', '{date}', '{time}', '{doctor}', '{service}'].map((variable) => (
+                        <Badge key={variable} variant="outline" className="text-xs">
+                          {variable}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                    Salvar Template
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
+          </TabsContent>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">Telefone</Label>
-                <Input id="phone" defaultValue="(11) 3333-4444" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">E-mail</Label>
-                <Input id="email" defaultValue="contato@vetprime.com.br" />
-              </div>
-            </div>
+          <TabsContent value="schedule">
+            <Card>
+              <CardHeader>
+                <CardTitle>Horários de Funcionamento</CardTitle>
+                <CardDescription>Configure os horários de atendimento da clínica</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {businessHours.map((schedule, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="w-24">
+                          <p className="font-medium">{schedule.day}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Input 
+                            type="time" 
+                            value={schedule.open} 
+                            className="w-20"
+                            disabled={!schedule.active}
+                          />
+                          <span className="text-gray-500">às</span>
+                          <Input 
+                            type="time" 
+                            value={schedule.close} 
+                            className="w-20"
+                            disabled={!schedule.active}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={schedule.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                          {schedule.active ? 'Aberto' : 'Fechado'}
+                        </Badge>
+                        <Button variant="outline" size="sm">
+                          {schedule.active ? 'Fechar' : 'Abrir'}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <h3 className="font-medium text-blue-800 mb-2">Configurações Especiais</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Tempo de Consulta (min)</label>
+                      <Input type="number" placeholder="30" className="w-full" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Intervalo entre Consultas (min)</label>
+                      <Input type="number" placeholder="15" className="w-full" />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-            <div className="space-y-2">
-              <Label htmlFor="address">Endereço Completo</Label>
-              <Textarea 
-                id="address" 
-                defaultValue="Rua das Flores, 123 - Centro - São Paulo, SP - CEP: 01234-567"
-                rows={3}
-              />
-            </div>
+          <TabsContent value="automation">
+            <Card>
+              <CardHeader>
+                <CardTitle>Regras de Automação</CardTitle>
+                <CardDescription>Configure ações automáticas do sistema</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {automationRules.map((rule, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <Zap className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">{rule.name}</h4>
+                          <p className="text-sm text-gray-600">{rule.description}</p>
+                          <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
+                            <span>Gatilho: {rule.trigger}</span>
+                            <span>Ação: {rule.action}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={rule.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                          {rule.active ? 'Ativa' : 'Inativa'}
+                        </Badge>
+                        <Button variant="outline" size="sm">
+                          {rule.active ? 'Desativar' : 'Ativar'}
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          Editar
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700">
+                  <Zap className="w-4 h-4 mr-2" />
+                  Nova Regra de Automação
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Salvar Informações
-            </Button>
-          </CardContent>
-        </Card>
+          <TabsContent value="notifications">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configurações de Notificação</CardTitle>
+                <CardDescription>Personalize como e quando receber alertas</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="font-medium mb-3">Alertas de Sistema</h3>
+                      <div className="space-y-3">
+                        {[
+                          'Estoque baixo',
+                          'Pagamentos em atraso',
+                          'Consultas canceladas',
+                          'Novos agendamentos'
+                        ].map((alert) => (
+                          <div key={alert} className="flex items-center justify-between">
+                            <span className="text-sm">{alert}</span>
+                            <div className="flex gap-2">
+                              <Button variant="outline" size="sm" className="h-8">
+                                <Bell className="w-3 h-3" />
+                              </Button>
+                              <Button variant="outline" size="sm" className="h-8">
+                                <Mail className="w-3 h-3" />
+                              </Button>
+                              <Button variant="outline" size="sm" className="h-8">
+                                <MessageCircle className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-medium mb-3">Frequência de Relatórios</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Relatório Financeiro</label>
+                          <select className="w-full p-2 border rounded-lg">
+                            <option>Diário</option>
+                            <option>Semanal</option>
+                            <option>Mensal</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Relatório de Estoque</label>
+                          <select className="w-full p-2 border rounded-lg">
+                            <option>Semanal</option>
+                            <option>Quinzenal</option>
+                            <option>Mensal</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5" />
-              Notificações
-            </CardTitle>
-            <CardDescription>Configure quando e como receber notificações</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Consultas do dia</p>
-                <p className="text-sm text-gray-600">Receber lembrete das consultas agendadas</p>
-              </div>
-              <Switch defaultChecked />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Estoque baixo</p>
-                <p className="text-sm text-gray-600">Alertas quando produtos estiverem acabando</p>
-              </div>
-              <Switch defaultChecked />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Vacinas vencendo</p>
-                <p className="text-sm text-gray-600">Lembrete de vacinas próximas do vencimento</p>
-              </div>
-              <Switch defaultChecked />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Relatórios mensais</p>
-                <p className="text-sm text-gray-600">Receber relatório de desempenho por e-mail</p>
-              </div>
-              <Switch />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              Segurança
-            </CardTitle>
-            <CardDescription>Gerencie a segurança da sua conta</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="current-password">Senha Atual</Label>
-              <Input id="current-password" type="password" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="new-password">Nova Senha</Label>
-                <Input id="new-password" type="password" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
-                <Input id="confirm-password" type="password" />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4">
-              <div>
-                <p className="font-medium">Autenticação de dois fatores</p>
-                <p className="text-sm text-gray-600">Adicione uma camada extra de segurança</p>
-              </div>
-              <Switch />
-            </div>
-
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Atualizar Senha
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Database className="w-5 h-5" />
-              Sistema
-            </CardTitle>
-            <CardDescription>Configurações gerais do sistema</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <p className="font-medium mb-2">Backup Automático</p>
-                <p className="text-sm text-gray-600 mb-3">Último backup: 15/11/2024 às 02:00</p>
-                <Button size="sm" variant="outline">Fazer Backup Agora</Button>
-              </div>
-
-              <div className="p-4 bg-green-50 rounded-lg">
-                <p className="font-medium mb-2">Status do Sistema</p>
-                <p className="text-sm text-green-600 mb-3">Todos os serviços operando normalmente</p>
-                <Button size="sm" variant="outline">Ver Logs</Button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t">
-              <div>
-                <p className="font-medium">Modo Manutenção</p>
-                <p className="text-sm text-gray-600">Desabilita temporariamente o acesso ao sistema</p>
-              </div>
-              <Switch />
-            </div>
-          </CardContent>
-        </Card>
+          <TabsContent value="integrations">
+            <Card>
+              <CardHeader>
+                <CardTitle>Integrações Externas</CardTitle>
+                <CardDescription>Conecte com serviços externos</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h3 className="font-medium">Serviços de Pagamento</h3>
+                    <div className="space-y-3">
+                      {[
+                        { name: 'WhatsApp Business', status: 'Conectado', color: 'green' },
+                        { name: 'Stripe Payments', status: 'Configurar', color: 'yellow' },
+                        { name: 'PagSeguro', status: 'Desconectado', color: 'gray' },
+                      ].map((service) => (
+                        <div key={service.name} className="flex items-center justify-between p-3 border rounded-lg">
+                          <span className="font-medium">{service.name}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge className={`bg-${service.color}-100 text-${service.color}-800`}>
+                              {service.status}
+                            </Badge>
+                            <Button variant="outline" size="sm">
+                              {service.status === 'Conectado' ? 'Configurar' : 'Conectar'}
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h3 className="font-medium">APIs e Webhooks</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">URL do Webhook</label>
+                        <Input placeholder="https://sua-api.com/webhook" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Token de API</label>
+                        <Input type="password" placeholder="Seu token secreto" />
+                      </div>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        Testar Conexão
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </PageLayout>
   );
