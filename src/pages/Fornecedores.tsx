@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,8 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Building2, Plus, Phone, Mail, MapPin, Package, ShoppingCart, AlertTriangle } from 'lucide-react';
+import NovoFornecedorModal from '@/components/fornecedores/NovoFornecedorModal';
+import NovoPedidoModal from '@/components/fornecedores/NovoPedidoModal';
 
 const Fornecedores = () => {
+  const [isNewSupplierOpen, setIsNewSupplierOpen] = useState(false);
+  const [isNewOrderOpen, setIsNewOrderOpen] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState('');
+
   const [suppliers] = useState([
     {
       id: 1,
@@ -95,6 +100,11 @@ const Fornecedores = () => {
     }
   };
 
+  const handleNewOrder = (supplierName?: string) => {
+    setSelectedSupplier(supplierName || '');
+    setIsNewOrderOpen(true);
+  };
+
   return (
     <PageLayout title="Gestão de Fornecedores">
       <div className="space-y-6">
@@ -103,7 +113,10 @@ const Fornecedores = () => {
             <h2 className="text-lg font-semibold">Sistema Completo de Fornecedores</h2>
             <p className="text-gray-600">Gerencie fornecedores, pedidos e estoque crítico</p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700"
+            onClick={() => setIsNewSupplierOpen(true)}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Novo Fornecedor
           </Button>
@@ -226,7 +239,11 @@ const Fornecedores = () => {
                           <Button variant="outline" size="sm">
                             Editar
                           </Button>
-                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                          <Button 
+                            size="sm" 
+                            className="bg-blue-600 hover:bg-blue-700"
+                            onClick={() => handleNewOrder(supplier.name)}
+                          >
                             Novo Pedido
                           </Button>
                         </div>
@@ -338,6 +355,23 @@ const Fornecedores = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        <NovoFornecedorModal
+          open={isNewSupplierOpen}
+          onOpenChange={setIsNewSupplierOpen}
+          onSuccess={() => {
+            // Refresh data
+          }}
+        />
+
+        <NovoPedidoModal
+          open={isNewOrderOpen}
+          onOpenChange={setIsNewOrderOpen}
+          supplierName={selectedSupplier}
+          onSuccess={() => {
+            // Refresh data
+          }}
+        />
       </div>
     </PageLayout>
   );

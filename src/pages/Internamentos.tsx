@@ -1,14 +1,15 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Activity, Clock, AlertTriangle, Users, Plus, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import NovoInternamentoModal from '@/components/internamento/NovoInternamentoModal';
 
 const Internamentos = () => {
   const navigate = useNavigate();
+  const [isNewInternmentOpen, setIsNewInternmentOpen] = useState(false);
   
   const internments = [
     {
@@ -83,7 +84,10 @@ const Internamentos = () => {
               <Eye className="w-4 h-4 mr-2" />
               Painel Tempo Real
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => setIsNewInternmentOpen(true)}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Novo Internamento
             </Button>
@@ -191,6 +195,14 @@ const Internamentos = () => {
             </div>
           </CardContent>
         </Card>
+
+        <NovoInternamentoModal
+          open={isNewInternmentOpen}
+          onOpenChange={setIsNewInternmentOpen}
+          onSuccess={() => {
+            // Refresh data
+          }}
+        />
       </div>
     </PageLayout>
   );

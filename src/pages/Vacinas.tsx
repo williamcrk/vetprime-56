@@ -1,12 +1,16 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Shield, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import NovaVacinacaoModal from '@/components/vacinas/NovaVacinacaoModal';
+import { useToast } from '@/hooks/use-toast';
 
 const Vacinas = () => {
+  const { toast } = useToast();
+  const [isNewVaccinationOpen, setIsNewVaccinationOpen] = useState(false);
+
   const vaccinations = [
     { 
       pet: 'Rex', 
@@ -73,6 +77,20 @@ const Vacinas = () => {
   const upToDateCount = vaccinations.filter(v => v.status === 'Em dia').length;
   const expiringSoonCount = vaccinations.filter(v => v.status === 'Vencendo').length;
   const overdueCount = vaccinations.filter(v => v.status === 'Atrasada').length;
+
+  const handleUpdateVaccination = (vaccination: any) => {
+    toast({
+      title: "Vacinação Atualizada",
+      description: `Status de ${vaccination.pet} atualizado`,
+    });
+  };
+
+  const handleConfirmAppointment = (appointment: any) => {
+    toast({
+      title: "Consulta Confirmada",
+      description: `Vacinação de ${appointment.pet} confirmada para ${appointment.date}`,
+    });
+  };
 
   return (
     <PageLayout title="Controle de Vacinas">
@@ -153,7 +171,11 @@ const Vacinas = () => {
                         Última: {vaccination.lastDate} • Próxima: {vaccination.nextDate}
                       </p>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleUpdateVaccination(vaccination)}
+                    >
                       Atualizar
                     </Button>
                   </div>
@@ -179,7 +201,11 @@ const Vacinas = () => {
                       <p className="text-sm text-gray-600 mt-1">{appointment.pet} - {appointment.owner}</p>
                       <p className="text-sm font-medium text-blue-600">{appointment.vaccine}</p>
                     </div>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                    <Button 
+                      size="sm" 
+                      className="bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleConfirmAppointment(appointment)}
+                    >
                       Confirmar
                     </Button>
                   </div>
@@ -187,7 +213,10 @@ const Vacinas = () => {
               </div>
               
               <div className="mt-4 pt-4 border-t">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button 
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  onClick={() => setIsNewVaccinationOpen(true)}
+                >
                   <Shield className="w-4 h-4 mr-2" />
                   Agendar Nova Vacinação
                 </Button>
@@ -195,6 +224,14 @@ const Vacinas = () => {
             </CardContent>
           </Card>
         </div>
+
+        <NovaVacinacaoModal
+          open={isNewVaccinationOpen}
+          onOpenChange={setIsNewVaccinationOpen}
+          onSuccess={() => {
+            // Refresh data
+          }}
+        />
       </div>
     </PageLayout>
   );
