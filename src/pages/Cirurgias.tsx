@@ -1,110 +1,102 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Scissors, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Scissors, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import ConcluirCirurgiaModal from '@/components/cirurgias/ConcluirCirurgiaModal';
+import { useToast } from '@/hooks/use-toast';
 
 const Cirurgias = () => {
-  const surgeries = [
-    { 
-      id: 'CIR001',
-      pet: 'Thor', 
-      owner: 'Ana Costa', 
-      procedure: 'Castração', 
-      status: 'Concluída', 
-      date: '10/11/2024',
+  const { toast } = useToast();
+  const [isConcluirOpen, setIsConcluirOpen] = useState(false);
+  const [selectedSurgery, setSelectedSurgery] = useState(null);
+
+  const cirurgias = [
+    {
+      id: '1',
+      petName: 'Max',
+      owner: 'Ana Costa',
+      procedure: 'Castração',
+      veterinarian: 'Dr. João Silva',
+      date: '16/11/2024',
       time: '09:00',
-      veterinarian: 'Dr. Pedro Costa',
-      duration: '45 min',
+      status: 'agendada',
       room: 'Centro Cirúrgico 1'
     },
-    { 
-      id: 'CIR002',
-      pet: 'Buddy', 
-      owner: 'Pedro Alves', 
-      procedure: 'Correção de fratura - Fêmur', 
-      status: 'Agendada', 
+    {
+      id: '2',
+      petName: 'Bella',
+      owner: 'Carlos Lima',
+      procedure: 'Cirurgia Ortopédica',
+      veterinarian: 'Dra. Maria Santos',
       date: '16/11/2024',
       time: '14:00',
-      veterinarian: 'Dr. João Silva',
-      duration: '2h 30min',
+      status: 'em_andamento',
       room: 'Centro Cirúrgico 2'
     },
-    { 
-      id: 'CIR003',
-      pet: 'Princesa', 
-      owner: 'Lucia Rocha', 
-      procedure: 'Remoção de tumor', 
-      status: 'Em andamento', 
+    {
+      id: '3',
+      petName: 'Thor',
+      owner: 'Sandra Oliveira',
+      procedure: 'Remoção de Tumor',
+      veterinarian: 'Dr. Pedro Costa',
       date: '15/11/2024',
       time: '10:30',
-      veterinarian: 'Dra. Maria Santos',
-      duration: '1h 45min',
+      status: 'concluida',
       room: 'Centro Cirúrgico 1'
-    },
+    }
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Concluída': return 'bg-green-100 text-green-800';
-      case 'Em andamento': return 'bg-blue-100 text-blue-800';
-      case 'Agendada': return 'bg-yellow-100 text-yellow-800';
-      case 'Cancelada': return 'bg-red-100 text-red-800';
+      case 'agendada': return 'bg-blue-100 text-blue-800';
+      case 'em_andamento': return 'bg-yellow-100 text-yellow-800';
+      case 'concluida': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Concluída': return <CheckCircle className="w-4 h-4" />;
-      case 'Em andamento': return <Clock className="w-4 h-4" />;
-      case 'Agendada': return <Clock className="w-4 h-4" />;
-      case 'Cancelada': return <AlertCircle className="w-4 h-4" />;
+      case 'agendada': return <Clock className="w-4 h-4" />;
+      case 'em_andamento': return <AlertTriangle className="w-4 h-4" />;
+      case 'concluida': return <CheckCircle className="w-4 h-4" />;
       default: return <Clock className="w-4 h-4" />;
     }
   };
 
-  const completedCount = surgeries.filter(s => s.status === 'Concluída').length;
-  const scheduledCount = surgeries.filter(s => s.status === 'Agendada').length;
-  const inProgressCount = surgeries.filter(s => s.status === 'Em andamento').length;
+  const handleConcluirCirurgia = (cirurgia: any) => {
+    setSelectedSurgery(cirurgia);
+    setIsConcluirOpen(true);
+  };
+
+  const handleIniciarCirurgia = (cirurgia: any) => {
+    toast({
+      title: "Cirurgia Iniciada",
+      description: `Cirurgia de ${cirurgia.petName} foi iniciada`,
+    });
+  };
 
   return (
     <PageLayout title="Cirurgias">
       <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold">Controle de Cirurgias</h2>
+            <p className="text-gray-600">Gerencie procedimentos cirúrgicos</p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
                 <Scissors className="w-5 h-5 text-blue-500" />
                 <div>
-                  <p className="text-2xl font-bold">{surgeries.length}</p>
+                  <p className="text-2xl font-bold">{cirurgias.length}</p>
                   <p className="text-sm text-gray-600">Total de Cirurgias</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <div>
-                  <p className="text-2xl font-bold">{completedCount}</p>
-                  <p className="text-sm text-gray-600">Concluídas</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-yellow-500" />
-                <div>
-                  <p className="text-2xl font-bold">{scheduledCount}</p>
-                  <p className="text-sm text-gray-600">Agendadas</p>
                 </div>
               </div>
             </CardContent>
@@ -115,8 +107,32 @@ const Cirurgias = () => {
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-blue-500" />
                 <div>
-                  <p className="text-2xl font-bold">{inProgressCount}</p>
+                  <p className="text-2xl font-bold">{cirurgias.filter(c => c.status === 'agendada').length}</p>
+                  <p className="text-sm text-gray-600">Agendadas</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-yellow-500" />
+                <div>
+                  <p className="text-2xl font-bold">{cirurgias.filter(c => c.status === 'em_andamento').length}</p>
                   <p className="text-sm text-gray-600">Em Andamento</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <div>
+                  <p className="text-2xl font-bold">{cirurgias.filter(c => c.status === 'concluida').length}</p>
+                  <p className="text-sm text-gray-600">Concluídas</p>
                 </div>
               </div>
             </CardContent>
@@ -125,62 +141,65 @@ const Cirurgias = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Agenda Cirúrgica</CardTitle>
-            <CardDescription>Todas as cirurgias programadas e realizadas</CardDescription>
+            <CardTitle>Lista de Cirurgias</CardTitle>
+            <CardDescription>Procedimentos cirúrgicos agendados e realizados</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {surgeries.map((surgery, index) => (
-                <div key={index} className="p-4 border rounded-lg">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-medium text-lg">Cirurgia #{surgery.id}</h3>
-                        <Badge className={getStatusColor(surgery.status)}>
-                          <div className="flex items-center gap-1">
-                            {getStatusIcon(surgery.status)}
-                            {surgery.status}
-                          </div>
-                        </Badge>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+              {cirurgias.map((cirurgia) => (
+                <div key={cirurgia.id} className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        {getStatusIcon(cirurgia.status)}
                         <div>
-                          <p className="text-gray-600">Paciente:</p>
-                          <p className="font-medium">{surgery.pet}</p>
-                          <p className="text-xs text-gray-500">{surgery.owner}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Data/Hora:</p>
-                          <p className="font-medium">{surgery.date}</p>
-                          <p className="text-xs text-gray-500">{surgery.time}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Veterinário:</p>
-                          <p className="font-medium">{surgery.veterinarian}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Local:</p>
-                          <p className="font-medium">{surgery.room}</p>
-                          <p className="text-xs text-gray-500">Duração: {surgery.duration}</p>
+                          <h3 className="font-medium text-lg">{cirurgia.petName}</h3>
+                          <p className="text-sm text-gray-600">{cirurgia.owner}</p>
                         </div>
                       </div>
                       
-                      <div className="mt-3">
-                        <p className="text-gray-600 text-sm">Procedimento:</p>
-                        <p className="font-medium">{surgery.procedure}</p>
+                      <div className="text-center">
+                        <p className="font-medium">{cirurgia.procedure}</p>
+                        <p className="text-sm text-gray-600">{cirurgia.room}</p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <p className="font-medium">{cirurgia.veterinarian}</p>
+                        <p className="text-sm text-gray-600">{cirurgia.date} - {cirurgia.time}</p>
                       </div>
                     </div>
                     
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        Ver Detalhes
-                      </Button>
-                      {surgery.status === 'Agendada' && (
-                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                          Iniciar
-                        </Button>
-                      )}
+                    <div className="flex items-center gap-3">
+                      <Badge className={getStatusColor(cirurgia.status)}>
+                        {cirurgia.status === 'agendada' ? 'Agendada' : 
+                         cirurgia.status === 'em_andamento' ? 'Em Andamento' : 'Concluída'}
+                      </Badge>
+                      
+                      <div className="flex gap-2">
+                        {cirurgia.status === 'agendada' && (
+                          <Button 
+                            size="sm" 
+                            className="bg-blue-600 hover:bg-blue-700"
+                            onClick={() => handleIniciarCirurgia(cirurgia)}
+                          >
+                            Iniciar
+                          </Button>
+                        )}
+                        {cirurgia.status === 'em_andamento' && (
+                          <Button 
+                            size="sm" 
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={() => handleConcluirCirurgia(cirurgia)}
+                          >
+                            Concluir
+                          </Button>
+                        )}
+                        {cirurgia.status === 'concluida' && (
+                          <Button size="sm" variant="outline">
+                            Ver Detalhes
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -188,6 +207,15 @@ const Cirurgias = () => {
             </div>
           </CardContent>
         </Card>
+
+        <ConcluirCirurgiaModal
+          open={isConcluirOpen}
+          onOpenChange={setIsConcluirOpen}
+          cirurgia={selectedSurgery}
+          onSuccess={() => {
+            // Refresh data
+          }}
+        />
       </div>
     </PageLayout>
   );
