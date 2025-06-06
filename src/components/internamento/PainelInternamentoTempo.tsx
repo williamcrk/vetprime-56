@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Activity, Clock, AlertTriangle, Syringe, Pill, 
   CheckCircle, Users, Bell, Heart, TrendingUp,
-  Calendar, User, Phone, Droplets, Timer
+  Calendar, User, Phone, Droplets, Timer, FileText
 } from 'lucide-react';
 
 const PainelInternamentoTempo = () => {
