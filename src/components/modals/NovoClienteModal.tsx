@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ClienteService, Cliente } from '@/components/ClienteService';
 
 interface NovoClienteModalProps {
   onClientAdded: (client: any) => void;
@@ -17,22 +18,24 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
+  const [formData, setFormData] = useState<Omit<Cliente, 'id' | 'created_at' | 'updated_at'>>({
+    nome: '',
     cpf: '',
-    address: '',
-    city: '',
-    state: '',
+    email: '',
+    telefone: '',
+    endereco: '',
+    cidade: '',
+    estado: '',
     cep: '',
-    observations: ''
+    data_nascimento: '',
+    observacoes: '',
+    is_active: true
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim()) {
+    if (!formData.nome.trim()) {
       toast({
         title: "Erro",
         description: "Nome é obrigatório",
@@ -44,37 +47,35 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
     setLoading(true);
 
     try {
-      const newClient = {
-        id: Date.now().toString(),
-        ...formData,
-        pets: [],
-        joined: new Date().toISOString().split('T')[0]
-      };
-
+      const newClient = await ClienteService.create(formData);
+      
       onClientAdded(newClient);
       
       toast({
         title: "Cliente cadastrado!",
-        description: `${formData.name} foi cadastrado com sucesso.`,
+        description: `${formData.nome} foi cadastrado com sucesso.`,
       });
 
       setFormData({
-        name: '',
-        phone: '',
-        email: '',
+        nome: '',
         cpf: '',
-        address: '',
-        city: '',
-        state: '',
+        email: '',
+        telefone: '',
+        endereco: '',
+        cidade: '',
+        estado: '',
         cep: '',
-        observations: ''
+        data_nascimento: '',
+        observacoes: '',
+        is_active: true
       });
       
       setOpen(false);
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Erro ao cadastrar cliente:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível cadastrar o cliente.",
+        description: error.message || "Não foi possível cadastrar o cliente.",
         variant: "destructive",
       });
     } finally {
@@ -90,70 +91,122 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
           Novo Cliente
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Cadastrar Novo Cliente</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Nome Completo *</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-              placeholder="Nome do cliente"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="phone">Telefone</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-2">
+              <Label htmlFor="nome">Nome Completo *</Label>
               <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                id="nome"
+                value={formData.nome}
+                onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                placeholder="Nome do cliente"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="cpf">CPF</Label>
+              <Input
+                id="cpf"
+                value={formData.cpf || ''}
+                onChange={(e) => setFormData({...formData, cpf: e.target.value})}
+                placeholder="000.000.000-00"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="telefone">Telefone</Label>
+              <Input
+                id="telefone"
+                value={formData.telefone || ''}
+                onChange={(e) => setFormData({...formData, telefone: e.target.value})}
                 placeholder="(11) 99999-9999"
               />
             </div>
-            <div>
+
+            <div className="md:col-span-2">
               <Label htmlFor="email">E-mail</Label>
               <Input
                 id="email"
                 type="email"
-                value={formData.email}
+                value={formData.email || ''}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 placeholder="cliente@email.com"
               />
             </div>
+
+            <div className="md:col-span-2">
+              <Label htmlFor="endereco">Endereço</Label>
+              <Input
+                id="endereco"
+                value={formData.endereco || ''}
+                onChange={(e) => setFormData({...formData, endereco: e.target.value})}
+                placeholder="Rua, número, complemento"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="cidade">Cidade</Label>
+              <Input
+                id="cidade"
+                value={formData.cidade || ''}
+                onChange={(e) => setFormData({...formData, cidade: e.target.value})}
+                placeholder="São Paulo"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="estado">Estado</Label>
+              <Input
+                id="estado"
+                value={formData.estado || ''}
+                onChange={(e) => setFormData({...formData, estado: e.target.value})}
+                placeholder="SP"
+                maxLength={2}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="cep">CEP</Label>
+              <Input
+                id="cep"
+                value={formData.cep || ''}
+                onChange={(e) => setFormData({...formData, cep: e.target.value})}
+                placeholder="00000-000"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="data_nascimento">Data de Nascimento</Label>
+              <Input
+                id="data_nascimento"
+                type="date"
+                value={formData.data_nascimento || ''}
+                onChange={(e) => setFormData({...formData, data_nascimento: e.target.value})}
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <Label htmlFor="observacoes">Observações</Label>
+              <Textarea
+                id="observacoes"
+                value={formData.observacoes || ''}
+                onChange={(e) => setFormData({...formData, observacoes: e.target.value})}
+                placeholder="Observações sobre o cliente..."
+                rows={3}
+              />
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="address">Endereço</Label>
-            <Input
-              id="address"
-              value={formData.address}
-              onChange={(e) => setFormData({...formData, address: e.target.value})}
-              placeholder="Rua, número, complemento"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="observations">Observações</Label>
-            <Textarea
-              id="observations"
-              value={formData.observations}
-              onChange={(e) => setFormData({...formData, observations: e.target.value})}
-              placeholder="Observações sobre o cliente..."
-              rows={3}
-            />
-          </div>
-
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="w-full sm:w-auto">
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="w-full sm:w-auto">
               {loading ? 'Cadastrando...' : 'Cadastrar'}
             </Button>
           </div>

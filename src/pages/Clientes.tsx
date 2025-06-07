@@ -1,72 +1,102 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Users, Search, Plus, Phone, Mail } from 'lucide-react';
+import { Users, Search, Plus, Phone, Mail, Loader2 } from 'lucide-react';
 import NovoClienteModal from '@/components/modals/NovoClienteModal';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { useToast } from '@/hooks/use-toast';
+import { ClienteService, Cliente } from '@/components/ClienteService';
 
 const Clientes = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [clients, setClients] = useState([
-    { id: '1', name: 'Maria Silva', phone: '(11) 99999-9999', email: 'maria@email.com', pets: ['Rex'], address: 'São Paulo, SP', joined: '2023-01-15' },
-    { id: '2', name: 'João Santos', phone: '(11) 88888-8888', email: 'joao@email.com', pets: ['Luna'], address: 'São Paulo, SP', joined: '2023-02-20' },
-    { id: '3', name: 'Ana Costa', phone: '(11) 77777-7777', email: 'ana@email.com', pets: ['Thor', 'Bella'], address: 'São Paulo, SP', joined: '2023-03-10' },
-    { id: '4', name: 'Carlos Lima', phone: '(11) 66666-6666', email: 'carlos@email.com', pets: ['Mimi'], address: 'São Paulo, SP', joined: '2023-04-05' },
-    { id: '5', name: 'Pedro Alves', phone: '(11) 55555-5555', email: 'pedro@email.com', pets: ['Buddy', 'Max'], address: 'São Paulo, SP', joined: '2023-05-12' },
-  ]);
+  const [clients, setClients] = useState<Cliente[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Carregar clientes do Supabase
+  useEffect(() => {
+    loadClients();
+  }, []);
+
+  const loadClients = async () => {
+    try {
+      setLoading(true);
+      const data = await ClienteService.getAll();
+      setClients(data);
+    } catch (error: any) {
+      console.error('Erro ao carregar clientes:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar os clientes.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.phone.includes(searchTerm)
+    client.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.telefone?.includes(searchTerm)
   );
 
-  const handleAddClient = (newClient: any) => {
+  const handleAddClient = (newClient: Cliente) => {
     setClients(prev => [newClient, ...prev]);
   };
 
-  const handleViewProfile = (client: any) => {
+  const handleViewProfile = (client: Cliente) => {
     toast({
-      title: `Perfil de ${client.name}`,
+      title: `Perfil de ${client.nome}`,
       description: `Abrindo perfil completo do cliente...`,
     });
     console.log('Ver perfil do cliente:', client);
   };
 
   const handleCall = (phone: string) => {
-    window.open(`tel:${phone}`, '_self');
+    if (phone) {
+      window.open(`tel:${phone}`, '_self');
+    }
   };
 
   const totalThisMonth = clients.filter(client => {
-    const clientDate = new Date(client.joined);
+    if (!client.created_at) return false;
+    const clientDate = new Date(client.created_at);
     const now = new Date();
     return clientDate.getMonth() === now.getMonth() && clientDate.getFullYear() === now.getFullYear();
   }).length;
 
+  if (loading) {
+    return (
+      <PageLayout title="Clientes">
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin" />
+          <span className="ml-2">Carregando clientes...</span>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout title="Clientes">
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            <div className="relative flex-1 sm:flex-none">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
-              <Input 
-                placeholder="Buscar cliente..." 
-                className="pl-9 w-full sm:w-80"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+          <div className="relative w-full sm:w-auto">
+            <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+            <Input 
+              placeholder="Buscar cliente..." 
+              className="pl-9 w-full sm:w-80"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <NovoClienteModal onClientAdded={handleAddClient} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
@@ -96,7 +126,7 @@ const Clientes = () => {
               <div className="flex items-center gap-2">
                 <Users className="w-5 h-5 text-purple-500" />
                 <div>
-                  <p className="text-2xl font-bold">89%</p>
+                  <p className="text-2xl font-bold">100%</p>
                   <p className="text-sm text-gray-600">Taxa de retenção</p>
                 </div>
               </div>
@@ -115,52 +145,53 @@ const Clientes = () => {
           <CardContent>
             <div className="space-y-4">
               {filteredClients.map((client) => (
-                <div key={client.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
-                  <div className="flex items-center gap-4 flex-1">
+                <div key={client.id} className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
+                  <div className="flex items-center gap-4 flex-1 w-full">
                     <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
                       <Users className="w-6 h-6 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium">{client.name}</h3>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
-                        <button 
-                          onClick={() => handleCall(client.phone)}
-                          className="flex items-center gap-1 hover:text-blue-600 text-left"
-                        >
-                          <Phone className="w-3 h-3" />
-                          {client.phone}
-                        </button>
-                        <div className="flex items-center gap-1">
-                          <Mail className="w-3 h-3" />
-                          {client.email}
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium truncate">{client.nome}</h3>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-gray-600">
+                        {client.telefone && (
+                          <button 
+                            onClick={() => handleCall(client.telefone!)}
+                            className="flex items-center gap-1 hover:text-blue-600 text-left truncate"
+                          >
+                            <Phone className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{client.telefone}</span>
+                          </button>
+                        )}
+                        {client.email && (
+                          <div className="flex items-center gap-1 truncate">
+                            <Mail className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{client.email}</span>
+                          </div>
+                        )}
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        Pets: {client.pets.join(', ')} • Cliente desde: {new Date(client.joined).toLocaleDateString()}
+                        {client.cidade && client.estado && `${client.cidade}, ${client.estado}`}
+                        {client.created_at && ` • Cliente desde: ${new Date(client.created_at).toLocaleDateString()}`}
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                    <div className="text-left sm:text-right">
-                      <p className="text-sm font-medium">{client.pets.length} pet(s)</p>
-                      <p className="text-xs text-gray-500">{client.address}</p>
-                    </div>
-                    <div className="flex gap-2 w-full sm:w-auto">
+                  <div className="flex gap-2 w-full lg:w-auto">
+                    {client.telefone && (
                       <WhatsAppButton 
-                        phone={client.phone}
-                        message={`Olá ${client.name}! Como podemos ajudá-lo hoje?`}
-                        className="flex-1 sm:flex-none"
+                        phone={client.telefone}
+                        message={`Olá ${client.nome}! Como podemos ajudá-lo hoje?`}
+                        className="flex-1 lg:flex-none"
                       />
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleViewProfile(client)}
-                        className="flex-1 sm:flex-none"
-                      >
-                        Ver Perfil
-                      </Button>
-                    </div>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleViewProfile(client)}
+                      className="flex-1 lg:flex-none"
+                    >
+                      Ver Perfil
+                    </Button>
                   </div>
                 </div>
               ))}

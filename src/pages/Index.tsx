@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GeometricBackground from '@/components/GeometricBackground';
 import GeometricBackgroundBlue from '@/components/GeometricBackgroundBlue';
 import GeometricBackgroundGreen from '@/components/GeometricBackgroundGreen';
@@ -12,6 +12,20 @@ import ColorSwitcher from '@/components/ColorSwitcher';
 
 const Index = () => {
   const [currentTheme, setCurrentTheme] = useState('blue');
+
+  // Carregar tema do localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('vetprime-theme');
+    if (savedTheme) {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
+
+  // Salvar tema no localStorage
+  const handleThemeChange = (theme: string) => {
+    setCurrentTheme(theme);
+    localStorage.setItem('vetprime-theme', theme);
+  };
 
   const getBackgroundComponent = () => {
     switch (currentTheme) {
@@ -44,18 +58,18 @@ const Index = () => {
     <div className="min-h-screen relative flex items-center justify-center p-4">
       {getBackgroundComponent()}
       
-      <ColorSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} />
+      <ColorSwitcher currentTheme={currentTheme} onThemeChange={handleThemeChange} />
       
       <div className="relative z-10 w-full max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="hidden lg:block text-white space-y-6 animate-slide-in">
-            <h1 className="text-6xl font-bold leading-tight">
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
               Bem-vindo ao
               <span className={`block bg-gradient-to-r ${getGradientText()} bg-clip-text text-transparent`}>
                 VetPrime
               </span>
             </h1>
-            <p className="text-xl text-white/80 leading-relaxed">
+            <p className="text-lg lg:text-xl text-white/80 leading-relaxed">
               Sistema completo de gestão veterinária. 
               Cuide melhor dos seus pacientes com tecnologia moderna.
             </p>
