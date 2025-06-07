@@ -20,13 +20,13 @@ export interface Vacinacao {
   pets?: {
     name: string;
     especie: string;
-  };
+  } | null;
   veterinarios?: {
     nome: string;
-  };
+  } | null;
   produtos?: {
     nome: string;
-  };
+  } | null;
 }
 
 export const VacinasService = {
