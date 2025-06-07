@@ -9,6 +9,76 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      agenda_eventos: {
+        Row: {
+          clinic_id: string | null
+          created_at: string | null
+          data_fim: string
+          data_inicio: string
+          id: string
+          observacoes: string | null
+          pet_id: string | null
+          status: string | null
+          tipo: string
+          titulo: string
+          tutor_id: string | null
+          updated_at: string | null
+          veterinario_id: string | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_fim: string
+          data_inicio: string
+          id?: string
+          observacoes?: string | null
+          pet_id?: string | null
+          status?: string | null
+          tipo: string
+          titulo: string
+          tutor_id?: string | null
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Update: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_fim?: string
+          data_inicio?: string
+          id?: string
+          observacoes?: string | null
+          pet_id?: string | null
+          status?: string | null
+          tipo?: string
+          titulo?: string
+          tutor_id?: string | null
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenda_eventos_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_eventos_tutor_id_fkey"
+            columns: ["tutor_id"]
+            isOneToOne: false
+            referencedRelation: "tutores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_eventos_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "veterinarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agendamentos: {
         Row: {
           criado_em: string | null
@@ -1139,6 +1209,47 @@ export type Database = {
           },
         ]
       }
+      itens_receita: {
+        Row: {
+          created_at: string | null
+          dosagem: string
+          duracao: string
+          frequencia: string
+          id: string
+          instrucoes: string | null
+          medicamento: string
+          receita_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dosagem: string
+          duracao: string
+          frequencia: string
+          id?: string
+          instrucoes?: string | null
+          medicamento: string
+          receita_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dosagem?: string
+          duracao?: string
+          frequencia?: string
+          id?: string
+          instrucoes?: string | null
+          medicamento?: string
+          receita_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itens_receita_receita_id_fkey"
+            columns: ["receita_id"]
+            isOneToOne: false
+            referencedRelation: "receitas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lembretes: {
         Row: {
           canal: string | null
@@ -1199,6 +1310,66 @@ export type Database = {
           },
           {
             foreignKeyName: "lembretes_tutor_id_fkey"
+            columns: ["tutor_id"]
+            isOneToOne: false
+            referencedRelation: "tutores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lembretes_sistema: {
+        Row: {
+          canal: string | null
+          clinic_id: string | null
+          created_at: string | null
+          data_envio: string
+          id: string
+          mensagem: string
+          pet_id: string | null
+          status: string | null
+          tipo: string
+          titulo: string
+          tutor_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          canal?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_envio: string
+          id?: string
+          mensagem: string
+          pet_id?: string | null
+          status?: string | null
+          tipo: string
+          titulo: string
+          tutor_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          canal?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_envio?: string
+          id?: string
+          mensagem?: string
+          pet_id?: string | null
+          status?: string | null
+          tipo?: string
+          titulo?: string
+          tutor_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lembretes_sistema_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lembretes_sistema_tutor_id_fkey"
             columns: ["tutor_id"]
             isOneToOne: false
             referencedRelation: "tutores"
@@ -1655,11 +1826,14 @@ export type Database = {
           clinic_id: string | null
           codigo: string | null
           created_at: string | null
+          data_validade: string | null
           descricao: string | null
           estoque_atual: number | null
           estoque_minimo: number | null
           fabricante: string | null
+          fornecedor_id: string | null
           id: string
+          lote: string | null
           nome: string
           preco_custo: number
           preco_venda: number
@@ -1671,11 +1845,14 @@ export type Database = {
           clinic_id?: string | null
           codigo?: string | null
           created_at?: string | null
+          data_validade?: string | null
           descricao?: string | null
           estoque_atual?: number | null
           estoque_minimo?: number | null
           fabricante?: string | null
+          fornecedor_id?: string | null
           id?: string
+          lote?: string | null
           nome: string
           preco_custo: number
           preco_venda: number
@@ -1687,18 +1864,80 @@ export type Database = {
           clinic_id?: string | null
           codigo?: string | null
           created_at?: string | null
+          data_validade?: string | null
           descricao?: string | null
           estoque_atual?: number | null
           estoque_minimo?: number | null
           fabricante?: string | null
+          fornecedor_id?: string | null
           id?: string
+          lote?: string | null
           nome?: string
           preco_custo?: number
           preco_venda?: number
           unidade?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "produtos_fornecedor_id_fkey"
+            columns: ["fornecedor_id"]
+            isOneToOne: false
+            referencedRelation: "fornecedores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      receitas: {
+        Row: {
+          clinic_id: string | null
+          created_at: string | null
+          data_prescricao: string | null
+          id: string
+          observacoes: string | null
+          pet_id: string | null
+          status: string | null
+          updated_at: string | null
+          veterinario_id: string | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_prescricao?: string | null
+          id?: string
+          observacoes?: string | null
+          pet_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Update: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_prescricao?: string | null
+          id?: string
+          observacoes?: string | null
+          pet_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receitas_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receitas_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "veterinarios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       servicos: {
         Row: {
@@ -1974,6 +2213,8 @@ export type Database = {
           lote: string | null
           observacoes: string | null
           paciente_id: string | null
+          preco: number | null
+          produto_id: string | null
           status: string | null
           updated_at: string | null
           vacina: string
@@ -1988,6 +2229,8 @@ export type Database = {
           lote?: string | null
           observacoes?: string | null
           paciente_id?: string | null
+          preco?: number | null
+          produto_id?: string | null
           status?: string | null
           updated_at?: string | null
           vacina: string
@@ -2002,6 +2245,8 @@ export type Database = {
           lote?: string | null
           observacoes?: string | null
           paciente_id?: string | null
+          preco?: number | null
+          produto_id?: string | null
           status?: string | null
           updated_at?: string | null
           vacina?: string
@@ -2020,6 +2265,13 @@ export type Database = {
             columns: ["paciente_id"]
             isOneToOne: false
             referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vacinacoes_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
             referencedColumns: ["id"]
           },
           {
