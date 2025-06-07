@@ -16,6 +16,17 @@ export interface Vacinacao {
   clinic_id?: string;
   created_at?: string;
   updated_at?: string;
+  // Relações
+  pets?: {
+    name: string;
+    especie: string;
+  };
+  veterinarios?: {
+    nome: string;
+  };
+  produtos?: {
+    nome: string;
+  };
 }
 
 export const VacinasService = {

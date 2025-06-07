@@ -13,6 +13,10 @@ export interface Financeiro {
   clinic_id?: string;
   created_at?: string;
   updated_at?: string;
+  // Relações
+  tutores?: {
+    nome: string;
+  };
 }
 
 export interface ItemFinanceiro {
@@ -25,6 +29,15 @@ export interface ItemFinanceiro {
   valor_unitario: number;
   valor_total: number;
   created_at?: string;
+  // Relações
+  produtos?: {
+    nome: string;
+    preco_venda: number;
+  };
+  servicos?: {
+    nome: string;
+    preco: number;
+  };
 }
 
 export const FinanceiroService = {

@@ -88,7 +88,16 @@ const NovoPacienteModal = ({ onPatientAdded }: NovoPacienteModalProps) => {
     setLoading(true);
 
     try {
-      const newPatient = await PacienteService.create(formData);
+      const newPatient = await PacienteService.create({
+        ...formData,
+        // Garantir que campos opcionais não sejam strings vazias
+        especie: formData.especie || undefined,
+        raca: formData.raca || undefined,
+        cor: formData.cor || undefined,
+        data_nascimento: formData.data_nascimento || undefined,
+        microchip: formData.microchip || undefined,
+        observacoes: formData.observacoes || undefined,
+      });
       
       onPatientAdded(newPatient);
       

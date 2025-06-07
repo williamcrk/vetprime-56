@@ -47,7 +47,19 @@ const NovoClienteModal = ({ onClientAdded }: NovoClienteModalProps) => {
     setLoading(true);
 
     try {
-      const newClient = await ClienteService.create(formData);
+      const newClient = await ClienteService.create({
+        ...formData,
+        // Garantir que campos opcionais não sejam strings vazias
+        cpf: formData.cpf || undefined,
+        email: formData.email || undefined,
+        telefone: formData.telefone || undefined,
+        endereco: formData.endereco || undefined,
+        cidade: formData.cidade || undefined,
+        estado: formData.estado || undefined,
+        cep: formData.cep || undefined,
+        data_nascimento: formData.data_nascimento || undefined,
+        observacoes: formData.observacoes || undefined,
+      });
       
       onClientAdded(newClient);
       

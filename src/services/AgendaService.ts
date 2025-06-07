@@ -15,6 +15,17 @@ export interface AgendaEvento {
   clinic_id?: string;
   created_at?: string;
   updated_at?: string;
+  // Relações
+  pets?: {
+    name: string;
+    especie: string;
+  };
+  tutores?: {
+    nome: string;
+  };
+  veterinarios?: {
+    nome: string;
+  };
 }
 
 export const AgendaService = {
