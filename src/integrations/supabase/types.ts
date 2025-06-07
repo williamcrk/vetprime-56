@@ -249,6 +249,199 @@ export type Database = {
           },
         ]
       }
+      cirurgias: {
+        Row: {
+          anestesia_utilizada: string | null
+          atendimento_id: string | null
+          clinic_id: string | null
+          complicacoes: string | null
+          created_at: string | null
+          data_agendada: string | null
+          data_realizada: string | null
+          duracao_minutos: number | null
+          id: string
+          observacoes: string | null
+          pet_id: string | null
+          procedimento_detalhado: string | null
+          status: string | null
+          tipo_cirurgia: string
+          updated_at: string | null
+          veterinario_id: string | null
+        }
+        Insert: {
+          anestesia_utilizada?: string | null
+          atendimento_id?: string | null
+          clinic_id?: string | null
+          complicacoes?: string | null
+          created_at?: string | null
+          data_agendada?: string | null
+          data_realizada?: string | null
+          duracao_minutos?: number | null
+          id?: string
+          observacoes?: string | null
+          pet_id?: string | null
+          procedimento_detalhado?: string | null
+          status?: string | null
+          tipo_cirurgia: string
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Update: {
+          anestesia_utilizada?: string | null
+          atendimento_id?: string | null
+          clinic_id?: string | null
+          complicacoes?: string | null
+          created_at?: string | null
+          data_agendada?: string | null
+          data_realizada?: string | null
+          duracao_minutos?: number | null
+          id?: string
+          observacoes?: string | null
+          pet_id?: string | null
+          procedimento_detalhado?: string | null
+          status?: string | null
+          tipo_cirurgia?: string
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cirurgias_atendimento_id_fkey"
+            columns: ["atendimento_id"]
+            isOneToOne: false
+            referencedRelation: "atendimentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cirurgias_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cirurgias_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cirurgias_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "veterinarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clientes: {
+        Row: {
+          cep: string | null
+          cidade: string | null
+          clinic_id: string | null
+          cpf: string | null
+          created_at: string | null
+          data_nascimento: string | null
+          email: string | null
+          endereco: string | null
+          estado: string | null
+          id: string
+          nome: string
+          observacoes: string | null
+          rg: string | null
+          telefone: string | null
+          updated_at: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          cep?: string | null
+          cidade?: string | null
+          clinic_id?: string | null
+          cpf?: string | null
+          created_at?: string | null
+          data_nascimento?: string | null
+          email?: string | null
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          nome: string
+          observacoes?: string | null
+          rg?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          cep?: string | null
+          cidade?: string | null
+          clinic_id?: string | null
+          cpf?: string | null
+          created_at?: string | null
+          data_nascimento?: string | null
+          email?: string | null
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          rg?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clientes_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinicas: {
+        Row: {
+          cep: string | null
+          cidade: string | null
+          cnpj: string | null
+          created_at: string | null
+          email: string | null
+          endereco: string | null
+          estado: string | null
+          id: string
+          nome: string
+          telefone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cep?: string | null
+          cidade?: string | null
+          cnpj?: string | null
+          created_at?: string | null
+          email?: string | null
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          nome: string
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cep?: string | null
+          cidade?: string | null
+          cnpj?: string | null
+          created_at?: string | null
+          email?: string | null
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          nome?: string
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       clinics: {
         Row: {
           address: string | null
@@ -389,6 +582,173 @@ export type Database = {
           },
         ]
       }
+      evolucoes: {
+        Row: {
+          atendimento_id: string | null
+          clinic_id: string | null
+          created_at: string | null
+          data_evolucao: string | null
+          evolucao: string
+          frequencia_cardiaca: number | null
+          frequencia_respiratoria: number | null
+          id: string
+          internacao_id: string | null
+          observacoes: string | null
+          peso_atual: number | null
+          pet_id: string | null
+          temperatura: number | null
+          veterinario_id: string | null
+        }
+        Insert: {
+          atendimento_id?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_evolucao?: string | null
+          evolucao: string
+          frequencia_cardiaca?: number | null
+          frequencia_respiratoria?: number | null
+          id?: string
+          internacao_id?: string | null
+          observacoes?: string | null
+          peso_atual?: number | null
+          pet_id?: string | null
+          temperatura?: number | null
+          veterinario_id?: string | null
+        }
+        Update: {
+          atendimento_id?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_evolucao?: string | null
+          evolucao?: string
+          frequencia_cardiaca?: number | null
+          frequencia_respiratoria?: number | null
+          id?: string
+          internacao_id?: string | null
+          observacoes?: string | null
+          peso_atual?: number | null
+          pet_id?: string | null
+          temperatura?: number | null
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolucoes_atendimento_id_fkey"
+            columns: ["atendimento_id"]
+            isOneToOne: false
+            referencedRelation: "atendimentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolucoes_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolucoes_internacao_id_fkey"
+            columns: ["internacao_id"]
+            isOneToOne: false
+            referencedRelation: "internacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolucoes_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolucoes_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "veterinarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exames: {
+        Row: {
+          atendimento_id: string | null
+          clinic_id: string | null
+          created_at: string | null
+          data_resultado: string | null
+          data_solicitacao: string | null
+          id: string
+          interpretacao: string | null
+          observacoes: string | null
+          pet_id: string | null
+          resultado: string | null
+          status: string | null
+          tipo_exame: string
+          updated_at: string | null
+          veterinario_id: string | null
+        }
+        Insert: {
+          atendimento_id?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_resultado?: string | null
+          data_solicitacao?: string | null
+          id?: string
+          interpretacao?: string | null
+          observacoes?: string | null
+          pet_id?: string | null
+          resultado?: string | null
+          status?: string | null
+          tipo_exame: string
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Update: {
+          atendimento_id?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_resultado?: string | null
+          data_solicitacao?: string | null
+          id?: string
+          interpretacao?: string | null
+          observacoes?: string | null
+          pet_id?: string | null
+          resultado?: string | null
+          status?: string | null
+          tipo_exame?: string
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exames_atendimento_id_fkey"
+            columns: ["atendimento_id"]
+            isOneToOne: false
+            referencedRelation: "atendimentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exames_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exames_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exames_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "veterinarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       financeiro: {
         Row: {
           atendimento_id: string | null
@@ -455,6 +815,59 @@ export type Database = {
           },
         ]
       }
+      fornecedores: {
+        Row: {
+          clinic_id: string | null
+          cnpj_cpf: string | null
+          contato_principal: string | null
+          created_at: string | null
+          email: string | null
+          endereco: string | null
+          id: string
+          is_active: boolean | null
+          nome: string
+          observacoes: string | null
+          telefone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          cnpj_cpf?: string | null
+          contato_principal?: string | null
+          created_at?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          is_active?: boolean | null
+          nome: string
+          observacoes?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          clinic_id?: string | null
+          cnpj_cpf?: string | null
+          contato_principal?: string | null
+          created_at?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          is_active?: boolean | null
+          nome?: string
+          observacoes?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornecedores_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       internacoes: {
         Row: {
           atendimento_id: string | null
@@ -508,6 +921,76 @@ export type Database = {
             columns: ["pet_id"]
             isOneToOne: false
             referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internamentos: {
+        Row: {
+          clinic_id: string | null
+          created_at: string | null
+          data_entrada: string
+          data_saida: string | null
+          diagnostico: string | null
+          id: string
+          motivo: string | null
+          observacoes: string | null
+          paciente_id: string | null
+          status: string | null
+          tratamento: string | null
+          updated_at: string | null
+          veterinario_id: string | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_entrada: string
+          data_saida?: string | null
+          diagnostico?: string | null
+          id?: string
+          motivo?: string | null
+          observacoes?: string | null
+          paciente_id?: string | null
+          status?: string | null
+          tratamento?: string | null
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Update: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_entrada?: string
+          data_saida?: string | null
+          diagnostico?: string | null
+          id?: string
+          motivo?: string | null
+          observacoes?: string | null
+          paciente_id?: string | null
+          status?: string | null
+          tratamento?: string | null
+          updated_at?: string | null
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internamentos_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "internamentos_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "internamentos_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -652,6 +1135,73 @@ export type Database = {
             columns: ["produto_id"]
             isOneToOne: false
             referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lembretes: {
+        Row: {
+          canal: string | null
+          clinic_id: string | null
+          created_at: string | null
+          data_envio: string
+          id: string
+          mensagem: string
+          pet_id: string | null
+          status: string | null
+          tipo: string
+          titulo: string
+          tutor_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          canal?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_envio: string
+          id?: string
+          mensagem: string
+          pet_id?: string | null
+          status?: string | null
+          tipo: string
+          titulo: string
+          tutor_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          canal?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          data_envio?: string
+          id?: string
+          mensagem?: string
+          pet_id?: string | null
+          status?: string | null
+          tipo?: string
+          titulo?: string
+          tutor_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lembretes_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lembretes_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lembretes_tutor_id_fkey"
+            columns: ["tutor_id"]
+            isOneToOne: false
+            referencedRelation: "tutores"
             referencedColumns: ["id"]
           },
         ]
@@ -899,6 +1449,57 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      pedidos_fornecedor: {
+        Row: {
+          clinic_id: string | null
+          created_at: string | null
+          data_pedido: string | null
+          fornecedor_id: string | null
+          id: string
+          observacoes: string | null
+          status: string | null
+          updated_at: string | null
+          valor_total: number | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_pedido?: string | null
+          fornecedor_id?: string | null
+          id?: string
+          observacoes?: string | null
+          status?: string | null
+          updated_at?: string | null
+          valor_total?: number | null
+        }
+        Update: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_pedido?: string | null
+          fornecedor_id?: string | null
+          id?: string
+          observacoes?: string | null
+          status?: string | null
+          updated_at?: string | null
+          valor_total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_fornecedor_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_fornecedor_fornecedor_id_fkey"
+            columns: ["fornecedor_id"]
+            isOneToOne: false
+            referencedRelation: "fornecedores"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       perfis: {
         Row: {
@@ -1312,6 +1913,123 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      usuarios: {
+        Row: {
+          ativo: boolean | null
+          auth_user_id: string | null
+          clinic_id: string | null
+          created_at: string | null
+          crmv: string | null
+          email: string
+          id: string
+          nome: string
+          role: string
+          telefone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          auth_user_id?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          crmv?: string | null
+          email: string
+          id?: string
+          nome: string
+          role: string
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          auth_user_id?: string | null
+          clinic_id?: string | null
+          created_at?: string | null
+          crmv?: string | null
+          email?: string
+          id?: string
+          nome?: string
+          role?: string
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usuarios_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vacinacoes: {
+        Row: {
+          clinic_id: string | null
+          created_at: string | null
+          data_aplicacao: string | null
+          data_vencimento: string | null
+          id: string
+          lote: string | null
+          observacoes: string | null
+          paciente_id: string | null
+          status: string | null
+          updated_at: string | null
+          vacina: string
+          veterinario_id: string | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_aplicacao?: string | null
+          data_vencimento?: string | null
+          id?: string
+          lote?: string | null
+          observacoes?: string | null
+          paciente_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          vacina: string
+          veterinario_id?: string | null
+        }
+        Update: {
+          clinic_id?: string | null
+          created_at?: string | null
+          data_aplicacao?: string | null
+          data_vencimento?: string | null
+          id?: string
+          lote?: string | null
+          observacoes?: string | null
+          paciente_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          vacina?: string
+          veterinario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vacinacoes_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vacinacoes_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vacinacoes_veterinario_id_fkey"
+            columns: ["veterinario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vacinas: {
         Row: {
