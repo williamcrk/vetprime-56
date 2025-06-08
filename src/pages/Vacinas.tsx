@@ -9,6 +9,7 @@ import { VacinasService, type Vacinacao } from '@/services/VacinasService';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import NovaVacinacaoModalInteligente from '@/components/vacinas/NovaVacinacaoModalInteligente';
 
 const Vacinas = () => {
   const { toast } = useToast();
@@ -16,6 +17,7 @@ const Vacinas = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroStatus, setFiltroStatus] = useState<string>('todos');
+  const [modalOpen, setModalOpen] = useState(false);
 
   const loadVacinacoes = async () => {
     try {
@@ -39,8 +41,9 @@ const Vacinas = () => {
   }, []);
 
   const vacinacoesFiltradas = vacinacoes.filter(vacinacao => {
-    const matchesSearch = vacinacao.pets?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         vacinacao.vacina.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = 
+      (vacinacao.pets?.name && vacinacao.pets.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      vacinacao.vacina.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filtroStatus === 'todos' || vacinacao.status === filtroStatus;
     return matchesSearch && matchesStatus;
   });
@@ -63,10 +66,10 @@ const Vacinas = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Aplicada': return <CheckCircle className="w-4 h-4" />;
-      case 'Agendada': return <Calendar className="w-4 h-4" />;
-      case 'Cancelada': return <AlertTriangle className="w-4 h-4" />;
-      default: return <Syringe className="w-4 h-4" />;
+      case 'Aplicada': return <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />;
+      case 'Agendada': return <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />;
+      case 'Cancelada': return <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4" />;
+      default: return <Syringe className="w-3 h-3 sm:w-4 sm:h-4" />;
     }
   };
 
@@ -74,7 +77,7 @@ const Vacinas = () => {
     return (
       <PageLayout title="Vacinas">
         <div className="flex items-center justify-center py-8">
-          <div className="text-gray-500">Carregando vacinações...</div>
+          <div className="text-gray-500 text-sm">Carregando vacinações...</div>
         </div>
       </PageLayout>
     );
@@ -82,14 +85,15 @@ const Vacinas = () => {
 
   return (
     <PageLayout title="Vacinas">
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            <div className="relative flex-1 sm:flex-none">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+      <div className="space-y-4">
+        {/* Header Actions */}
+        <div className="flex flex-col space-y-3 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+          <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-3">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input 
                 placeholder="Buscar por paciente ou vacina..." 
-                className="pl-9 w-full sm:w-80"
+                className="pl-9 text-sm h-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -97,7 +101,7 @@ const Vacinas = () => {
             <select 
               value={filtroStatus} 
               onChange={(e) => setFiltroStatus(e.target.value)}
-              className="border rounded-md px-3 py-2 text-sm"
+              className="border rounded-md px-3 py-1.5 text-sm h-9 min-w-[120px]"
             >
               <option value="todos">Todos</option>
               <option value="Agendada">Agendadas</option>
@@ -105,125 +109,123 @@ const Vacinas = () => {
               <option value="Cancelada">Canceladas</option>
             </select>
           </div>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
+          <Button onClick={() => setModalOpen(true)} className="text-sm h-9">
+            <Plus className="w-4 h-4 mr-1" />
             Nova Vacinação
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3">
               <div className="flex items-center gap-2">
-                <Syringe className="w-5 h-5 text-blue-500" />
-                <div>
-                  <p className="text-2xl font-bold">{vacinacoes.length}</p>
-                  <p className="text-sm text-gray-600">Total de Vacinas</p>
+                <Syringe className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg font-bold">{vacinacoes.length}</p>
+                  <p className="text-xs text-gray-600 truncate">Total</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3">
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-yellow-500" />
-                <div>
-                  <p className="text-2xl font-bold">{vacinasPendentes}</p>
-                  <p className="text-sm text-gray-600">Agendadas</p>
+                <Calendar className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg font-bold">{vacinasPendentes}</p>
+                  <p className="text-xs text-gray-600 truncate">Agendadas</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <div>
-                  <p className="text-2xl font-bold">{vacinasAplicadas}</p>
-                  <p className="text-sm text-gray-600">Aplicadas</p>
+                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg font-bold">{vacinasAplicadas}</p>
+                  <p className="text-xs text-gray-600 truncate">Aplicadas</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-500" />
-                <div>
-                  <p className="text-2xl font-bold">{vacinasVencidas}</p>
-                  <p className="text-sm text-gray-600">Vencidas</p>
+                <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg font-bold">{vacinasVencidas}</p>
+                  <p className="text-xs text-gray-600 truncate">Vencidas</p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
+        {/* Vacinations List */}
         <Card>
-          <CardHeader>
-            <CardTitle>Histórico de Vacinações</CardTitle>
-            <CardDescription>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Histórico de Vacinações</CardTitle>
+            <CardDescription className="text-sm">
               {vacinacoesFiltradas.length} vacinação(ões) encontrada(s)
               {searchTerm && ` para "${searchTerm}"`}
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="p-3">
+            <div className="space-y-3">
               {vacinacoesFiltradas.map((vacinacao) => (
-                <div key={vacinacao.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Syringe className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium">{vacinacao.vacina}</h3>
-                      <p className="text-sm text-gray-600">
-                        Paciente: {vacinacao.pets?.name} ({vacinacao.pets?.especie})
-                      </p>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-                        {vacinacao.data_aplicacao && (
-                          <span className="text-xs text-gray-500">
-                            Aplicação: {format(new Date(vacinacao.data_aplicacao), 'dd/MM/yyyy', { locale: ptBR })}
-                          </span>
-                        )}
-                        {vacinacao.data_vencimento && (
-                          <>
-                            <span className="text-xs text-gray-400 hidden sm:inline">•</span>
-                            <span className="text-xs text-gray-500">
-                              Vencimento: {format(new Date(vacinacao.data_vencimento), 'dd/MM/yyyy', { locale: ptBR })}
-                            </span>
-                          </>
-                        )}
-                        {vacinacao.lote && (
-                          <>
-                            <span className="text-xs text-gray-400 hidden sm:inline">•</span>
-                            <span className="text-xs text-gray-500">
-                              Lote: {vacinacao.lote}
-                            </span>
-                          </>
-                        )}
+                <div key={vacinacao.id} className="p-3 border rounded-lg hover:bg-gray-50">
+                  <div className="flex flex-col space-y-2">
+                    {/* Header */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Syringe className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-medium text-sm truncate">{vacinacao.vacina}</h3>
+                          <p className="text-xs text-gray-600 truncate">
+                            {vacinacao.pets?.name} ({vacinacao.pets?.especie})
+                          </p>
+                        </div>
                       </div>
+                      <span className={`px-2 py-1 rounded-full text-xs flex items-center gap-1 flex-shrink-0 ${getStatusColor(vacinacao.status || 'Agendada')}`}>
+                        {getStatusIcon(vacinacao.status || 'Agendada')}
+                        <span className="hidden sm:inline">{vacinacao.status || 'Agendada'}</span>
+                      </span>
+                    </div>
+
+                    {/* Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-gray-500">
+                      {vacinacao.data_aplicacao && (
+                        <span>
+                          Aplicação: {format(new Date(vacinacao.data_aplicacao), 'dd/MM/yyyy', { locale: ptBR })}
+                        </span>
+                      )}
+                      {vacinacao.data_vencimento && (
+                        <span>
+                          Vencimento: {format(new Date(vacinacao.data_vencimento), 'dd/MM/yyyy', { locale: ptBR })}
+                        </span>
+                      )}
+                      {vacinacao.lote && (
+                        <span>Lote: {vacinacao.lote}</span>
+                      )}
                       {vacinacao.veterinarios && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          Veterinário: {vacinacao.veterinarios.nome}
-                        </p>
+                        <span>Dr(a): {vacinacao.veterinarios.nome}</span>
                       )}
                     </div>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                    <span className={`px-2 py-1 rounded-full text-xs flex items-center gap-1 ${getStatusColor(vacinacao.status || 'Agendada')}`}>
-                      {getStatusIcon(vacinacao.status || 'Agendada')}
-                      {vacinacao.status || 'Agendada'}
-                    </span>
-                    <div className="flex gap-2 w-full sm:w-auto">
-                      <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+
+                    {/* Actions */}
+                    <div className="flex gap-2 pt-1">
+                      <Button variant="outline" size="sm" className="text-xs h-7 flex-1 sm:flex-none">
                         Editar
                       </Button>
                       {vacinacao.status === 'Agendada' && (
-                        <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                        <Button variant="outline" size="sm" className="text-xs h-7 flex-1 sm:flex-none">
                           Aplicar
                         </Button>
                       )}
@@ -234,10 +236,10 @@ const Vacinas = () => {
               
               {vacinacoesFiltradas.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                  <Syringe className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <p>Nenhuma vacinação encontrada</p>
+                  <Syringe className="w-8 h-8 mx-auto mb-4 text-gray-300" />
+                  <p className="text-sm">Nenhuma vacinação encontrada</p>
                   {searchTerm && (
-                    <p className="text-sm mt-2">
+                    <p className="text-xs mt-2">
                       Tente buscar por outro termo ou{' '}
                       <button 
                         onClick={() => {setSearchTerm(''); setFiltroStatus('todos');}}
@@ -252,6 +254,12 @@ const Vacinas = () => {
             </div>
           </CardContent>
         </Card>
+
+        <NovaVacinacaoModalInteligente 
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          onSuccess={loadVacinacoes}
+        />
       </div>
     </PageLayout>
   );
