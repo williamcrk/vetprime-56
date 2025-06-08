@@ -17,6 +17,12 @@ export interface Paciente {
   clinic_id?: string;
   created_at?: string;
   updated_at?: string;
+  // Relações
+  tutores?: {
+    nome: string;
+    telefone?: string;
+    email?: string;
+  };
 }
 
 export const PacienteService = {
@@ -52,7 +58,13 @@ export const PacienteService = {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    
+    // Ensure proper structure with null handling
+    return (data || []).map(item => ({
+      ...item,
+      sexo: item.sexo === 'Macho' || item.sexo === 'Fêmea' ? item.sexo : undefined,
+      tutores: item.tutores && typeof item.tutores === 'object' && !Array.isArray(item.tutores) && 'nome' in item.tutores ? item.tutores : undefined
+    }));
   },
 
   async getById(id: string) {

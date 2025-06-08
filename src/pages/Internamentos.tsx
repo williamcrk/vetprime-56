@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Heart, Search, Plus, Calendar, Clock, AlertCircle, CheckCircle } from 'lucide-react';
-import NovoInternamentoModal from '@/components/internamento/NovoInternamentoModal';
+import NovoInternamentoModalInteligente from '@/components/internamento/NovoInternamentoModalInteligente';
 import { useToast } from '@/hooks/use-toast';
 import { InternamentosService, type Internamento } from '@/services/InternamentosService';
 import { format } from 'date-fns';
@@ -109,32 +108,32 @@ const Internamentos = () => {
 
   return (
     <PageLayout title="Internamentos">
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Header Actions */}
-        <div className="flex flex-col space-y-3 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <Input 
               placeholder="Buscar paciente ou tutor..." 
-              className="pl-9 text-sm h-9"
+              className="pl-9 text-sm h-8 sm:h-9"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button onClick={() => setModalOpen(true)} className="text-sm h-9">
-            <Plus className="w-4 h-4 mr-1" />
+          <Button onClick={() => setModalOpen(true)} className="text-xs sm:text-sm h-8 sm:h-9">
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
             Novo Internamento
           </Button>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
           <Card>
-            <CardContent className="p-3">
-              <div className="flex items-center gap-2">
-                <Heart className="w-4 h-4 text-red-500 flex-shrink-0" />
+            <CardContent className="p-2 sm:p-3">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-lg font-bold">{internamentos.length}</p>
+                  <p className="text-sm sm:text-lg font-bold">{internamentos.length}</p>
                   <p className="text-xs text-gray-600 truncate">Total</p>
                 </div>
               </div>
@@ -142,11 +141,11 @@ const Internamentos = () => {
           </Card>
           
           <Card>
-            <CardContent className="p-3">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <CardContent className="p-2 sm:p-3">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-lg font-bold">{internadosAtivos}</p>
+                  <p className="text-sm sm:text-lg font-bold">{internadosAtivos}</p>
                   <p className="text-xs text-gray-600 truncate">Ativos</p>
                 </div>
               </div>
@@ -154,11 +153,11 @@ const Internamentos = () => {
           </Card>
           
           <Card>
-            <CardContent className="p-3">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+            <CardContent className="p-2 sm:p-3">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-lg font-bold">{altasHoje}</p>
+                  <p className="text-sm sm:text-lg font-bold">{altasHoje}</p>
                   <p className="text-xs text-gray-600 truncate">Altas Hoje</p>
                 </div>
               </div>
@@ -166,11 +165,11 @@ const Internamentos = () => {
           </Card>
           
           <Card>
-            <CardContent className="p-3">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-purple-500 flex-shrink-0" />
+            <CardContent className="p-2 sm:p-3">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-purple-500 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-lg font-bold">
+                  <p className="text-sm sm:text-lg font-bold">
                     {internamentos.length > 0 ? 
                       Math.round(internamentos.reduce((acc, i) => acc + calcularTempoInternacao(i.data_entrada, i.data_saida), 0) / internamentos.length) 
                       : 0}
@@ -184,32 +183,32 @@ const Internamentos = () => {
 
         {/* Internamentos List */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Lista de Internamentos</CardTitle>
-            <CardDescription className="text-sm">
+          <CardHeader className="pb-2 sm:pb-3">
+            <CardTitle className="text-sm sm:text-base">Lista de Internamentos</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               {filteredInternamentos.length} internamento(s) encontrado(s)
               {searchTerm && ` para "${searchTerm}"`}
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-3">
-            <div className="space-y-3">
+          <CardContent className="p-2 sm:p-3">
+            <div className="space-y-2 sm:space-y-3">
               {filteredInternamentos.map((internamento) => (
-                <div key={internamento.id} className="p-3 border rounded-lg hover:bg-gray-50">
+                <div key={internamento.id} className="p-2 sm:p-3 border rounded-lg hover:bg-gray-50">
                   <div className="flex flex-col space-y-2">
                     {/* Header */}
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Heart className="w-4 h-4 text-white" />
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h3 className="font-medium text-sm truncate">{internamento.pets?.name}</h3>
+                          <h3 className="font-medium text-xs sm:text-sm truncate">{internamento.pets?.name}</h3>
                           <p className="text-xs text-gray-600 truncate">
                             Tutor: {internamento.pets?.tutores?.nome}
                           </p>
                         </div>
                       </div>
-                      <span className={`px-2 py-1 rounded-full text-xs flex items-center gap-1 flex-shrink-0 ${getStatusColor(internamento.status || 'Internado')}`}>
+                      <span className={`px-1 sm:px-2 py-1 rounded-full text-xs flex items-center gap-1 flex-shrink-0 ${getStatusColor(internamento.status || 'Internado')}`}>
                         {getStatusIcon(internamento.status || 'Internado')}
                         <span className="hidden sm:inline">{internamento.status || 'Internado'}</span>
                       </span>
@@ -246,15 +245,15 @@ const Internamentos = () => {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2 pt-1">
-                      <Button variant="outline" size="sm" className="text-xs h-7 flex-1 sm:flex-none">
+                    <div className="flex gap-1 sm:gap-2 pt-1">
+                      <Button variant="outline" size="sm" className="text-xs h-6 sm:h-7 flex-1 sm:flex-none">
                         Ver Detalhes
                       </Button>
                       {internamento.status === 'Internado' && (
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="text-xs h-7 flex-1 sm:flex-none"
+                          className="text-xs h-6 sm:h-7 flex-1 sm:flex-none"
                           onClick={() => handleFinalizarInternamento(internamento.id!)}
                         >
                           Dar Alta
@@ -267,8 +266,8 @@ const Internamentos = () => {
               
               {filteredInternamentos.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                  <Heart className="w-8 h-8 mx-auto mb-4 text-gray-300" />
-                  <p className="text-sm">Nenhum internamento encontrado</p>
+                  <Heart className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-4 text-gray-300" />
+                  <p className="text-xs sm:text-sm">Nenhum internamento encontrado</p>
                   {searchTerm && (
                     <p className="text-xs mt-2">
                       Tente buscar por outro termo ou{' '}
@@ -286,7 +285,7 @@ const Internamentos = () => {
           </CardContent>
         </Card>
 
-        <NovoInternamentoModal
+        <NovoInternamentoModalInteligente
           open={modalOpen}
           onOpenChange={setModalOpen}
           onSuccess={loadInternamentos}

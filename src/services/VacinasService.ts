@@ -62,9 +62,9 @@ export const VacinasService = {
     // Ensure proper structure with null handling
     return (data || []).map(item => ({
       ...item,
-      pets: item.pets && typeof item.pets === 'object' && 'name' in item.pets ? item.pets : null,
-      veterinarios: item.veterinarios && typeof item.veterinarios === 'object' && 'nome' in item.veterinarios ? item.veterinarios : null,
-      produtos: item.produtos && typeof item.produtos === 'object' && 'nome' in item.produtos ? item.produtos : null
+      pets: item.pets && typeof item.pets === 'object' && !Array.isArray(item.pets) && 'name' in item.pets ? item.pets : null,
+      veterinarios: item.veterinarios && typeof item.veterinarios === 'object' && !Array.isArray(item.veterinarios) && 'nome' in item.veterinarios ? item.veterinarios : null,
+      produtos: item.produtos && typeof item.produtos === 'object' && !Array.isArray(item.produtos) && 'nome' in item.produtos ? item.produtos : null
     }));
   },
 

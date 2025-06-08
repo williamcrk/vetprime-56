@@ -1,17 +1,18 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
-export interface Internamento {
+export interface Exame {
   id?: string;
-  paciente_id: string;
-  motivo: string;
-  status?: string;
-  data_entrada: string;
-  data_saida?: string;
-  diagnostico?: string;
-  tratamento?: string;
-  observacoes?: string;
+  tipo_exame: string;
+  pet_id?: string;
   veterinario_id?: string;
+  atendimento_id?: string;
+  data_solicitacao?: string;
+  data_resultado?: string;
+  resultado?: string;
+  interpretacao?: string;
+  status?: string;
+  observacoes?: string;
   clinic_id?: string;
   created_at?: string;
   updated_at?: string;
@@ -29,14 +30,14 @@ export interface Internamento {
   } | null;
 }
 
-export const InternamentosService = {
-  async create(internamento: Omit<Internamento, 'id' | 'created_at' | 'updated_at'>) {
+export const ExamesService = {
+  async create(exame: Omit<Exame, 'id' | 'created_at' | 'updated_at'>) {
     const { data, error } = await supabase
-      .from('internamentos')
-      .insert([internamento])
+      .from('exames')
+      .insert([exame])
       .select(`
         *,
-        pets:paciente_id (
+        pets:pet_id (
           name, 
           especie,
           tutores:tutor_id (nome, telefone)
@@ -51,10 +52,10 @@ export const InternamentosService = {
 
   async getAll() {
     const { data, error } = await supabase
-      .from('internamentos')
+      .from('exames')
       .select(`
         *,
-        pets:paciente_id (
+        pets:pet_id (
           name, 
           especie,
           tutores:tutor_id (nome, telefone)
@@ -65,7 +66,6 @@ export const InternamentosService = {
 
     if (error) throw error;
     
-    // Ensure proper structure with null handling
     return (data || []).map(item => ({
       ...item,
       pets: item.pets && typeof item.pets === 'object' && !Array.isArray(item.pets) && 'name' in item.pets ? item.pets : null,
@@ -75,10 +75,10 @@ export const InternamentosService = {
 
   async getById(id: string) {
     const { data, error } = await supabase
-      .from('internamentos')
+      .from('exames')
       .select(`
         *,
-        pets:paciente_id (
+        pets:pet_id (
           name, 
           especie,
           tutores:tutor_id (nome, telefone)
@@ -92,10 +92,10 @@ export const InternamentosService = {
     return data;
   },
 
-  async update(id: string, internamento: Partial<Internamento>) {
+  async update(id: string, exame: Partial<Exame>) {
     const { data, error } = await supabase
-      .from('internamentos')
-      .update({ ...internamento, updated_at: new Date().toISOString() })
+      .from('exames')
+      .update({ ...exame, updated_at: new Date().toISOString() })
       .eq('id', id)
       .select()
       .single();
@@ -104,12 +104,14 @@ export const InternamentosService = {
     return data;
   },
 
-  async finalizarInternamento(id: string) {
+  async adicionarResultado(id: string, resultado: string, interpretacao?: string) {
     const { data, error } = await supabase
-      .from('internamentos')
+      .from('exames')
       .update({ 
-        status: 'Finalizado',
-        data_saida: new Date().toISOString(),
+        resultado,
+        interpretacao,
+        data_resultado: new Date().toISOString(),
+        status: 'concluido',
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
