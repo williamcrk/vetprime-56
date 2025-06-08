@@ -40,21 +40,29 @@ export const CirurgiasService = {
   async create(cirurgia: Omit<Cirurgia, 'id' | 'created_at' | 'updated_at'>) {
     const { data, error } = await supabase
       .from('cirurgias')
-      .insert([cirurgia])
+      .insert([{
+        pet_id: cirurgia.paciente_id,
+        tipo_cirurgia: cirurgia.procedimento,
+        data_agendada: cirurgia.data_cirurgia,
+        status: cirurgia.status || 'agendada',
+        veterinario_id: cirurgia.veterinario_id,
+        observacoes: cirurgia.observacoes_pre,
+        complicacoes: cirurgia.complicacoes,
+        clinic_id: cirurgia.clinic_id
+      }])
       .select(`
         *,
-        pets:paciente_id (
+        pets:pet_id (
           name, 
           especie,
           tutores:tutor_id (nome, telefone)
         ),
-        veterinarios:veterinario_id (nome),
-        anestesistas:anestesista_id (nome)
+        veterinarios:veterinario_id (nome)
       `)
       .single();
 
     if (error) throw error;
-    return data;
+    return this.transformData(data);
   },
 
   async getAll() {
@@ -62,24 +70,18 @@ export const CirurgiasService = {
       .from('cirurgias')
       .select(`
         *,
-        pets:paciente_id (
+        pets:pet_id (
           name, 
           especie,
           tutores:tutor_id (nome, telefone)
         ),
-        veterinarios:veterinario_id (nome),
-        anestesistas:anestesista_id (nome)
+        veterinarios:veterinario_id (nome)
       `)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
     
-    return (data || []).map(item => ({
-      ...item,
-      pets: item.pets && typeof item.pets === 'object' && !Array.isArray(item.pets) && 'name' in item.pets ? item.pets : null,
-      veterinarios: item.veterinarios && typeof item.veterinarios === 'object' && !Array.isArray(item.veterinarios) && 'nome' in item.veterinarios ? item.veterinarios : null,
-      anestesistas: item.anestesistas && typeof item.anestesistas === 'object' && !Array.isArray(item.anestesistas) && 'nome' in item.anestesistas ? item.anestesistas : null
-    }));
+    return (data || []).map(item => this.transformData(item));
   },
 
   async getById(id: string) {
@@ -87,25 +89,27 @@ export const CirurgiasService = {
       .from('cirurgias')
       .select(`
         *,
-        pets:paciente_id (
+        pets:pet_id (
           name, 
           especie,
           tutores:tutor_id (nome, telefone)
         ),
-        veterinarios:veterinario_id (nome),
-        anestesistas:anestesista_id (nome)
+        veterinarios:veterinario_id (nome)
       `)
       .eq('id', id)
       .single();
 
     if (error) throw error;
-    return data;
+    return this.transformData(data);
   },
 
   async update(id: string, cirurgia: Partial<Cirurgia>) {
     const { data, error } = await supabase
       .from('cirurgias')
-      .update({ ...cirurgia, updated_at: new Date().toISOString() })
+      .update({ 
+        ...cirurgia, 
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', id)
       .select()
       .single();
@@ -119,7 +123,7 @@ export const CirurgiasService = {
       .from('cirurgias')
       .update({ 
         status: 'em_andamento',
-        hora_inicio: new Date().toISOString(),
+        data_realizada: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -135,8 +139,7 @@ export const CirurgiasService = {
       .from('cirurgias')
       .update({ 
         status: 'concluida',
-        hora_fim: new Date().toISOString(),
-        observacoes_pos,
+        observacoes: observacoes_pos,
         complicacoes,
         updated_at: new Date().toISOString()
       })
@@ -146,5 +149,24 @@ export const CirurgiasService = {
 
     if (error) throw error;
     return data;
+  },
+
+  transformData(item: any): Cirurgia {
+    return {
+      id: item.id,
+      paciente_id: item.pet_id,
+      procedimento: item.tipo_cirurgia || '',
+      data_cirurgia: item.data_agendada || item.created_at,
+      status: item.status,
+      veterinario_id: item.veterinario_id,
+      sala: item.sala,
+      observacoes_pre: item.observacoes,
+      complicacoes: item.complicacoes,
+      clinic_id: item.clinic_id,
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+      pets: item.pets && typeof item.pets === 'object' && !Array.isArray(item.pets) && 'name' in item.pets ? item.pets : null,
+      veterinarios: item.veterinarios && typeof item.veterinarios === 'object' && !Array.isArray(item.veterinarios) && 'nome' in item.veterinarios ? item.veterinarios : null
+    };
   }
 };
