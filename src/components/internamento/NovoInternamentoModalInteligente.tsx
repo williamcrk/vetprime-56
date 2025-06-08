@@ -69,7 +69,10 @@ const NovoInternamentoModalInteligente = ({ open, onOpenChange, onSuccess }: Nov
       const pacientesData = await PacienteService.getAll();
       const pacientesDoCliente = pacientesData.filter(p => 
         p.tutores && p.tutores.nome === clienteSelecionado.nome
-      );
+      ).map(p => ({
+        ...p,
+        sexo: (p.sexo === 'Macho' || p.sexo === 'Fêmea') ? p.sexo : undefined
+      })) as Paciente[];
       setPacientesFiltrados(pacientesDoCliente);
     } catch (error) {
       console.error('Erro ao carregar pacientes:', error);

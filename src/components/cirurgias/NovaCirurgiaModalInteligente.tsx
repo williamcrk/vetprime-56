@@ -5,23 +5,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { ClienteService, type Cliente } from '@/components/ClienteService';
 import { PacienteService, type Paciente } from '@/components/PacienteService';
 import { ProfissionaisService, type Profissional } from '@/services/ProfissionaisService';
-import { VacinasService } from '@/services/VacinasService';
-import { Search } from 'lucide-react';
+import { CirurgiasService } from '@/services/CirurgiasService';
 
-interface NovaVacinacaoModalInteligenteProps {
+interface NovaCirurgiaModalInteligenteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
 }
 
-const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVacinacaoModalInteligenteProps) => {
+const NovaCirurgiaModalInteligente = ({ open, onOpenChange, onSuccess }: NovaCirurgiaModalInteligenteProps) => {
   const { toast } = useToast();
   const [clientes, setClientes] = useState<Cliente[]>([]);
-  const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [clienteSelecionado, setClienteSelecionado] = useState<Cliente | null>(null);
   const [pacientesFiltrados, setPacientesFiltrados] = useState<Paciente[]>([]);
@@ -30,21 +29,32 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
   const [formData, setFormData] = useState({
     clienteId: '',
     pacienteId: '',
-    vacina: '',
-    dataAplicacao: '',
-    dataVencimento: '',
+    procedimento: '',
+    dataCirurgia: '',
     veterinarioId: '',
-    lote: '',
-    observacoes: ''
+    anestesistaId: '',
+    sala: '',
+    observacoesPre: ''
   });
 
-  const vaccines = [
-    { name: 'V8 (Óctupla)', interval: 12 },
-    { name: 'V10 (Déctupla)', interval: 12 },
-    { name: 'Antirrábica', interval: 12 },
-    { name: 'Giardia', interval: 12 },
-    { name: 'Gripe Canina', interval: 6 },
-    { name: 'Leishmaniose', interval: 12 }
+  const procedimentos = [
+    'Castração',
+    'Ovário-histerectomia',
+    'Cirurgia Ortopédica',
+    'Remoção de Tumor',
+    'Cirurgia Gastrointestinal',
+    'Cirurgia Cardíaca',
+    'Cirurgia Oftálmica',
+    'Cirurgia Dental',
+    'Cirurgia de Emergência',
+    'Biópsia'
+  ];
+
+  const salas = [
+    'Centro Cirúrgico 1',
+    'Centro Cirúrgico 2',
+    'Sala de Emergência',
+    'Sala de Pequenos Procedimentos'
   ];
 
   useEffect(() => {
@@ -95,38 +105,8 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
     setFormData(prev => ({ ...prev, clienteId, pacienteId: '' }));
   };
 
-  const calculateNextDose = (vaccineType: string, dataAplicacao: string) => {
-    const vaccine = vaccines.find(v => v.name === vaccineType);
-    if (vaccine && dataAplicacao) {
-      const nextDate = new Date(dataAplicacao);
-      nextDate.setMonth(nextDate.getMonth() + vaccine.interval);
-      return nextDate.toISOString().split('T')[0];
-    }
-    return '';
-  };
-
-  const handleVaccineChange = (vaccine: string) => {
-    setFormData(prev => {
-      const newData = { ...prev, vacina: vaccine };
-      if (newData.dataAplicacao) {
-        newData.dataVencimento = calculateNextDose(vaccine, newData.dataAplicacao);
-      }
-      return newData;
-    });
-  };
-
-  const handleDateChange = (date: string) => {
-    setFormData(prev => {
-      const newData = { ...prev, dataAplicacao: date };
-      if (newData.vacina) {
-        newData.dataVencimento = calculateNextDose(newData.vacina, date);
-      }
-      return newData;
-    });
-  };
-
   const handleSubmit = async () => {
-    if (!formData.pacienteId || !formData.vacina || !formData.dataAplicacao) {
+    if (!formData.pacienteId || !formData.procedimento || !formData.dataCirurgia) {
       toast({
         title: "Erro",
         description: "Preencha os campos obrigatórios",
@@ -138,32 +118,32 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
     try {
       setLoading(true);
       
-      await VacinasService.create({
+      await CirurgiasService.create({
         paciente_id: formData.pacienteId,
-        vacina: formData.vacina,
-        data_aplicacao: new Date(formData.dataAplicacao).toISOString(),
-        data_vencimento: formData.dataVencimento ? new Date(formData.dataVencimento).toISOString() : undefined,
+        procedimento: formData.procedimento,
+        data_cirurgia: new Date(formData.dataCirurgia).toISOString(),
         veterinario_id: formData.veterinarioId || undefined,
-        lote: formData.lote || undefined,
-        observacoes: formData.observacoes || undefined,
-        status: 'Agendada'
+        anestesista_id: formData.anestesistaId || undefined,
+        sala: formData.sala || undefined,
+        observacoes_pre: formData.observacoesPre || undefined,
+        status: 'agendada'
       });
 
       toast({
         title: "Sucesso!",
-        description: "Vacinação agendada com sucesso",
+        description: "Cirurgia agendada com sucesso",
       });
 
       // Reset form
       setFormData({
         clienteId: '',
         pacienteId: '',
-        vacina: '',
-        dataAplicacao: '',
-        dataVencimento: '',
+        procedimento: '',
+        dataCirurgia: '',
         veterinarioId: '',
-        lote: '',
-        observacoes: ''
+        anestesistaId: '',
+        sala: '',
+        observacoesPre: ''
       });
 
       setClienteSelecionado(null);
@@ -171,10 +151,10 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
       onSuccess();
       onOpenChange(false);
     } catch (error) {
-      console.error('Erro ao criar vacinação:', error);
+      console.error('Erro ao agendar cirurgia:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível agendar a vacinação",
+        description: "Não foi possível agendar a cirurgia",
         variant: "destructive",
       });
     } finally {
@@ -186,14 +166,13 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-lg">Nova Vacinação</DialogTitle>
+          <DialogTitle className="text-lg">Agendar Cirurgia</DialogTitle>
           <DialogDescription className="text-sm">
             Selecione o cliente para carregar automaticamente seus pets
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
-          {/* Cliente Selection */}
           <div>
             <Label className="text-sm font-medium">Cliente *</Label>
             <Select onValueChange={handleClienteChange} value={formData.clienteId}>
@@ -210,7 +189,6 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
             </Select>
           </div>
 
-          {/* Pet Selection */}
           <div>
             <Label className="text-sm font-medium">Pet *</Label>
             <Select 
@@ -241,21 +219,32 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label className="text-sm font-medium">Vacina *</Label>
-              <Select onValueChange={handleVaccineChange} value={formData.vacina}>
+              <Label className="text-sm font-medium">Procedimento *</Label>
+              <Select onValueChange={(value) => setFormData(prev => ({ ...prev, procedimento: value }))} value={formData.procedimento}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione a vacina" />
+                  <SelectValue placeholder="Selecione o procedimento" />
                 </SelectTrigger>
                 <SelectContent>
-                  {vaccines.map((vaccine) => (
-                    <SelectItem key={vaccine.name} value={vaccine.name}>
-                      {vaccine.name}
+                  {procedimentos.map((proc) => (
+                    <SelectItem key={proc} value={proc}>
+                      {proc}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
+            <div>
+              <Label className="text-sm font-medium">Data da Cirurgia *</Label>
+              <Input
+                type="datetime-local"
+                value={formData.dataCirurgia}
+                onChange={(e) => setFormData(prev => ({ ...prev, dataCirurgia: e.target.value }))}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="text-sm font-medium">Veterinário</Label>
               <Select onValueChange={(value) => setFormData(prev => ({ ...prev, veterinarioId: value }))} value={formData.veterinarioId}>
@@ -271,52 +260,49 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label className="text-sm font-medium">Data de Aplicação *</Label>
-              <Input
-                type="date"
-                value={formData.dataAplicacao}
-                onChange={(e) => handleDateChange(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-medium">Data de Vencimento</Label>
-              <Input
-                type="date"
-                value={formData.dataVencimento}
-                onChange={(e) => setFormData(prev => ({ ...prev, dataVencimento: e.target.value }))}
-              />
+              <Label className="text-sm font-medium">Anestesista</Label>
+              <Select onValueChange={(value) => setFormData(prev => ({ ...prev, anestesistaId: value }))} value={formData.anestesistaId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  {profissionais.map((prof) => (
+                    <SelectItem key={prof.id} value={prof.id!}>
+                      {prof.nome} - {prof.crmv}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           <div>
-            <Label className="text-sm font-medium">Lote</Label>
-            <Input
-              value={formData.lote}
-              onChange={(e) => setFormData(prev => ({ ...prev, lote: e.target.value }))}
-              placeholder="Número do lote"
-            />
+            <Label className="text-sm font-medium">Sala</Label>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, sala: value }))} value={formData.sala}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a sala" />
+              </SelectTrigger>
+              <SelectContent>
+                {salas.map((sala) => (
+                  <SelectItem key={sala} value={sala}>
+                    {sala}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
-            <Label className="text-sm font-medium">Observações</Label>
-            <Input
-              value={formData.observacoes}
-              onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
-              placeholder="Observações sobre a vacinação"
+            <Label className="text-sm font-medium">Observações Pré-Cirúrgicas</Label>
+            <Textarea
+              value={formData.observacoesPre}
+              onChange={(e) => setFormData(prev => ({ ...prev, observacoesPre: e.target.value }))}
+              placeholder="Preparação, jejum, medicações..."
+              rows={3}
             />
           </div>
-
-          {formData.vacina && formData.dataVencimento && (
-            <div className="p-3 bg-green-50 rounded-lg text-sm">
-              <p className="text-green-800">
-                💡 <strong>Próxima dose:</strong> {new Date(formData.dataVencimento).toLocaleDateString()}
-              </p>
-            </div>
-          )}
 
           <div className="flex flex-col sm:flex-row gap-2 pt-4">
             <Button 
@@ -331,7 +317,7 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
               disabled={loading}
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
             >
-              {loading ? 'Salvando...' : 'Agendar Vacinação'}
+              {loading ? 'Salvando...' : 'Agendar Cirurgia'}
             </Button>
           </div>
         </div>
@@ -340,4 +326,4 @@ const NovaVacinacaoModalInteligente = ({ open, onOpenChange, onSuccess }: NovaVa
   );
 };
 
-export default NovaVacinacaoModalInteligente;
+export default NovaCirurgiaModalInteligente;
