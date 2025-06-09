@@ -4,10 +4,11 @@ import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { User, Search, Plus, Stethoscope, Mail, Phone } from 'lucide-react';
+import { User, Search, Plus, Stethoscope, Mail, Phone, Edit, Trash2 } from 'lucide-react';
 import { ProfissionaisService, type Profissional } from '@/services/ProfissionaisService';
 import { useToast } from '@/hooks/use-toast';
 import NovoProfissionalModal from '@/components/profissionais/NovoProfissionalModal';
+import EditarProfissionalModal from '@/components/profissionais/EditarProfissionalModal';
 
 const Profissionais = () => {
   const { toast } = useToast();
@@ -15,6 +16,8 @@ const Profissionais = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isNovoModalOpen, setIsNovoModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [profissionalSelecionado, setProfissionalSelecionado] = useState<Profissional | null>(null);
 
   const loadProfissionais = async () => {
     try {
@@ -39,9 +42,34 @@ const Profissionais = () => {
 
   const profissionaisFiltrados = profissionais.filter(profissional =>
     profissional.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    profissional.crmv.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (profissional.crmv && profissional.crmv.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (profissional.especialidade && profissional.especialidade.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  const handleEdit = (profissional: Profissional) => {
+    setProfissionalSelecionado(profissional);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = async (id: string, nome: string) => {
+    if (window.confirm(`Tem certeza que deseja excluir o profissional ${nome}?`)) {
+      try {
+        await ProfissionaisService.delete(id);
+        toast({
+          title: "Sucesso!",
+          description: "Profissional excluído com sucesso",
+        });
+        loadProfissionais();
+      } catch (error) {
+        console.error('Erro ao excluir profissional:', error);
+        toast({
+          title: "Erro",
+          description: "Não foi possível excluir o profissional",
+          variant: "destructive",
+        });
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -134,7 +162,9 @@ const Profissionais = () => {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-medium">{profissional.nome}</h3>
-                      <p className="text-sm text-gray-600">CRMV: {profissional.crmv}</p>
+                      {profissional.crmv && (
+                        <p className="text-sm text-gray-600">CRMV: {profissional.crmv}</p>
+                      )}
                       {profissional.especialidade && (
                         <p className="text-xs text-gray-500">{profissional.especialidade}</p>
                       )}
@@ -159,18 +189,30 @@ const Profissionais = () => {
                   </div>
                   
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                    {profissional.comissao_percentual && (
+                    {profissional.comissao_percentual !== undefined && profissional.comissao_percentual > 0 && (
                       <div className="text-right">
                         <span className="text-xs text-gray-500">Comissão</span>
                         <p className="text-sm font-medium">{profissional.comissao_percentual}%</p>
                       </div>
                     )}
                     <div className="flex gap-2 w-full sm:w-auto">
-                      <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 sm:flex-none"
+                        onClick={() => handleEdit(profissional)}
+                      >
+                        <Edit className="w-4 h-4 mr-1" />
                         Editar
                       </Button>
-                      <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-                        Ver Perfil
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 sm:flex-none text-red-600 hover:text-red-700"
+                        onClick={() => profissional.id && handleDelete(profissional.id, profissional.nome)}
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Excluir
                       </Button>
                     </div>
                   </div>
@@ -202,6 +244,13 @@ const Profissionais = () => {
           open={isNovoModalOpen}
           onOpenChange={setIsNovoModalOpen}
           onSuccess={loadProfissionais}
+        />
+
+        <EditarProfissionalModal
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          onSuccess={loadProfissionais}
+          profissional={profissionalSelecionado}
         />
       </div>
     </PageLayout>

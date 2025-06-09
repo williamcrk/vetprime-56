@@ -5,88 +5,63 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Building2, Search, Plus, MapPin, Phone, Mail, Users } from 'lucide-react';
+import { Building2, Search, Plus, MapPin, Phone, Mail, Users, Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-interface Clinica {
-  id: string;
-  nome: string;
-  cnpj: string;
-  endereco: string;
-  cidade: string;
-  estado: string;
-  telefone?: string;
-  email?: string;
-  status: 'ativa' | 'inativa';
-  usuarios_count: number;
-  created_at: string;
-}
+import { ClinicasService, type Clinica } from '@/services/ClinicasService';
+import NovaClinicaModal from '@/components/multi-clinicas/NovaClinicaModal';
 
 const MultiClinicas = () => {
   const { toast } = useToast();
   const [clinicas, setClinicas] = useState<Clinica[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isNovaModalOpen, setIsNovaModalOpen] = useState(false);
 
-  // Dados de exemplo
-  const clinicasExample: Clinica[] = [
-    {
-      id: '1',
-      nome: 'Clínica Veterinária Pet Care Central',
-      cnpj: '12.345.678/0001-90',
-      endereco: 'Rua das Flores, 123',
-      cidade: 'São Paulo',
-      estado: 'SP',
-      telefone: '(11) 3456-7890',
-      email: 'central@petcare.com.br',
-      status: 'ativa',
-      usuarios_count: 8,
-      created_at: '2024-01-15'
-    },
-    {
-      id: '2',
-      nome: 'Pet Care Unidade Moema',
-      cnpj: '12.345.678/0002-71',
-      endereco: 'Av. Ibirapuera, 456',
-      cidade: 'São Paulo',
-      estado: 'SP',
-      telefone: '(11) 3456-7891',
-      email: 'moema@petcare.com.br',
-      status: 'ativa',
-      usuarios_count: 5,
-      created_at: '2024-02-10'
-    },
-    {
-      id: '3',
-      nome: 'Pet Care Unidade Vila Madalena',
-      cnpj: '12.345.678/0003-52',
-      endereco: 'Rua Harmonia, 789',
-      cidade: 'São Paulo',
-      estado: 'SP',
-      telefone: '(11) 3456-7892',
-      email: 'vilamadalena@petcare.com.br',
-      status: 'inativa',
-      usuarios_count: 3,
-      created_at: '2024-03-05'
+  const loadClinicas = async () => {
+    try {
+      setLoading(true);
+      const data = await ClinicasService.getAll();
+      setClinicas(data);
+    } catch (error) {
+      console.error('Erro ao carregar clínicas:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar as clínicas.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
-    // Simula carregamento de dados
-    setTimeout(() => {
-      setClinicas(clinicasExample);
-      setLoading(false);
-    }, 1000);
+    loadClinicas();
   }, []);
 
   const clinicasFiltradas = clinicas.filter(clinica =>
     clinica.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    clinica.cidade.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    clinica.cnpj.includes(searchTerm)
+    (clinica.cidade && clinica.cidade.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (clinica.cnpj && clinica.cnpj.includes(searchTerm))
   );
 
-  const getStatusColor = (status: string) => {
-    return status === 'ativa' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+  const handleDelete = async (id: string, nome: string) => {
+    if (window.confirm(`Tem certeza que deseja excluir a clínica ${nome}?`)) {
+      try {
+        await ClinicasService.delete(id);
+        toast({
+          title: "Sucesso!",
+          description: "Clínica excluída com sucesso",
+        });
+        loadClinicas();
+      } catch (error) {
+        console.error('Erro ao excluir clínica:', error);
+        toast({
+          title: "Erro",
+          description: "Não foi possível excluir a clínica",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   if (loading) {
@@ -110,7 +85,7 @@ const MultiClinicas = () => {
             </h2>
             <p className="text-gray-600">Gerencie todas as unidades da sua rede</p>
           </div>
-          <Button>
+          <Button onClick={() => setIsNovaModalOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Nova Clínica
           </Button>
@@ -146,20 +121,8 @@ const MultiClinicas = () => {
               <div className="flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-green-500" />
                 <div>
-                  <p className="text-2xl font-bold">{clinicas.filter(c => c.status === 'ativa').length}</p>
+                  <p className="text-2xl font-bold">{clinicas.length}</p>
                   <p className="text-sm text-gray-600">Clínicas Ativas</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-500" />
-                <div>
-                  <p className="text-2xl font-bold">{clinicas.reduce((acc, c) => acc + c.usuarios_count, 0)}</p>
-                  <p className="text-sm text-gray-600">Total de Usuários</p>
                 </div>
               </div>
             </CardContent>
@@ -170,8 +133,20 @@ const MultiClinicas = () => {
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-orange-500" />
                 <div>
-                  <p className="text-2xl font-bold">{new Set(clinicas.map(c => c.cidade)).size}</p>
+                  <p className="text-2xl font-bold">{new Set(clinicas.filter(c => c.cidade).map(c => c.cidade)).size}</p>
                   <p className="text-sm text-gray-600">Cidades</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-purple-500" />
+                <div>
+                  <p className="text-2xl font-bold">{clinicas.filter(c => c.email).length}</p>
+                  <p className="text-sm text-gray-600">Com E-mail</p>
                 </div>
               </div>
             </CardContent>
@@ -198,17 +173,21 @@ const MultiClinicas = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-medium text-lg">{clinica.nome}</h3>
-                          <Badge className={getStatusColor(clinica.status)}>
-                            {clinica.status === 'ativa' ? 'Ativa' : 'Inativa'}
+                          <Badge className="bg-green-100 text-green-800">
+                            Ativa
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600 mb-2">CNPJ: {clinica.cnpj}</p>
+                        {clinica.cnpj && (
+                          <p className="text-sm text-gray-600 mb-2">CNPJ: {clinica.cnpj}</p>
+                        )}
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          <div className="flex items-center gap-1 text-gray-600">
-                            <MapPin className="w-3 h-3" />
-                            {clinica.endereco}, {clinica.cidade} - {clinica.estado}
-                          </div>
+                          {(clinica.endereco || clinica.cidade) && (
+                            <div className="flex items-center gap-1 text-gray-600">
+                              <MapPin className="w-3 h-3" />
+                              {[clinica.endereco, clinica.cidade, clinica.estado].filter(Boolean).join(', ')}
+                            </div>
+                          )}
                           {clinica.telefone && (
                             <div className="flex items-center gap-1 text-gray-600">
                               <Phone className="w-3 h-3" />
@@ -221,23 +200,23 @@ const MultiClinicas = () => {
                               {clinica.email}
                             </div>
                           )}
-                          <div className="flex items-center gap-1 text-gray-600">
-                            <Users className="w-3 h-3" />
-                            {clinica.usuarios_count} usuário(s)
-                          </div>
                         </div>
                       </div>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
                       <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                        Acessar
+                        <Edit className="w-4 h-4 mr-1" />
+                        Editar
                       </Button>
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                        Configurar
-                      </Button>
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                        Relatórios
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full sm:w-auto text-red-600 hover:text-red-700"
+                        onClick={() => clinica.id && handleDelete(clinica.id, clinica.nome)}
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Excluir
                       </Button>
                     </div>
                   </div>
@@ -264,6 +243,12 @@ const MultiClinicas = () => {
             </div>
           </CardContent>
         </Card>
+
+        <NovaClinicaModal
+          open={isNovaModalOpen}
+          onOpenChange={setIsNovaModalOpen}
+          onSuccess={loadClinicas}
+        />
       </div>
     </PageLayout>
   );
