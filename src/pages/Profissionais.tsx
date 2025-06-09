@@ -7,12 +7,14 @@ import { Input } from '@/components/ui/input';
 import { User, Search, Plus, Stethoscope, Mail, Phone } from 'lucide-react';
 import { ProfissionaisService, type Profissional } from '@/services/ProfissionaisService';
 import { useToast } from '@/hooks/use-toast';
+import NovoProfissionalModal from '@/components/profissionais/NovoProfissionalModal';
 
 const Profissionais = () => {
   const { toast } = useToast();
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isNovoModalOpen, setIsNovoModalOpen] = useState(false);
 
   const loadProfissionais = async () => {
     try {
@@ -66,7 +68,7 @@ const Profissionais = () => {
               />
             </div>
           </div>
-          <Button>
+          <Button onClick={() => setIsNovoModalOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Novo Profissional
           </Button>
@@ -195,6 +197,12 @@ const Profissionais = () => {
             </div>
           </CardContent>
         </Card>
+
+        <NovoProfissionalModal
+          open={isNovoModalOpen}
+          onOpenChange={setIsNovoModalOpen}
+          onSuccess={loadProfissionais}
+        />
       </div>
     </PageLayout>
   );
